@@ -1,0 +1,21 @@
+
+# third-party library
+import torch
+import torchvision
+import matplotlib.pyplot as plt
+
+
+train_data = torchvision.datasets.MNIST(
+    root='./mnist/',
+    train=True,                                     # this is training data
+    transform=torchvision.transforms.ToTensor(),    # Converts a PIL.Image or numpy.ndarray to
+                                                    # torch.FloatTensor of shape (C x H x W) and normalize in the range [0.0, 1.0]
+    download=True,
+)
+
+# plot one example
+print(train_data.train_data.size())                 # (60000, 28, 28)
+print(train_data.train_labels.size())               # (60000)
+plt.imshow(train_data.train_data[0].numpy(), cmap='gray')
+plt.title('%i' % train_data.train_labels[0])
+plt.show()
