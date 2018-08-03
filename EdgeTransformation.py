@@ -19,7 +19,7 @@ cv.imwrite('first.jpg',edges)
 os.makedirs(os.getcwd() + '/datasets/video_jpegs/edge_videos')
 
 for i in range(nImgs):
-  img = cv.imread(imgList[i],0)
+  img = cv.imread(images_dir+ '/' + imgList[i],0)
   edges = cv.Canny(img,100,200)
   print('%s' % 'edge_'+imgList[i])
   cv.imwrite(images_dir + '/edge_videos/' + 'edge_'+imgList[i],edges)
