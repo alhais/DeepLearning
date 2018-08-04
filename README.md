@@ -10,6 +10,9 @@ unzip -d datasets/video_jpegs/ datasets/video_jpegs.zip
 python EdgeTransformation.py
 
 # Get files from Colab Notebook
+```ruby
 from google.colab import files
-
+import os
+os.chdir(os.getcwd() + '/datasets/video_jpegs/edge_videos/')
 files.download('edge_video-2018-08-03-14-11-16 001.jpg')
+```
