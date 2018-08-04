@@ -13,6 +13,8 @@ python EdgeTransformation.py
 ```ruby
 from google.colab import files
 import os
+owd = os.getcwd()
 os.chdir(os.getcwd() + '/datasets/video_jpegs/edge_videos/')
 files.download('edge_video-2018-08-03-14-11-16 001.jpg')
+os.chdir(owd)
 ```
