@@ -5,7 +5,7 @@ git clone https://github.com/alhais/DeepLearning.git
 cd DeepLearning
 
 ## Generate Train Data
-!python 
+python tools/create_dataset.py
 
 
 
