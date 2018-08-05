@@ -9,6 +9,9 @@ unzip -d datasets/video_jpegs/ datasets/video_jpegs.zip
 ## Generate edge images
 python EdgeTransformation.py
 
+
+zip -r myfiles.zip datasets/
+
 # Get files from Colab Notebook
 ```ruby
 from google.colab import files
