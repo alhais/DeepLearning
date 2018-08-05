@@ -8,7 +8,6 @@ success,image = vidcap.read()
 count = 0
 success = True
 os.makedirs(os.getcwd() + '/DeepLearning/datasets/train')
-os.makedirs(os.getcwd() + '/pix2pix-tensorflow/facades/train')
 while success:
   edges = cv2.Canny(image,100,200)
   color_edges = cv2.cvtColor(edges, 8)
