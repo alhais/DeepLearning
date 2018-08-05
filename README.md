@@ -1,12 +1,22 @@
 # Get dataset and code 
 
 git clone https://github.com/alhais/DeepLearning.git
+git clone https://github.com/affinelayer/pix2pix-tensorflow.git
 
-cd DeepLearning
 
 ## Generate Train Data
-python tools/create_dataset.py
+python DeepLearning/tools/create_dataset.py
 
+
+## Train
+cd pix2pix-tensorflow
+
+python pix2pix.py \
+  --mode train \
+  --output_dir facades_train \
+  --max_epochs 200 \
+  --input_dir facades/train \
+  --which_direction BtoA
 
 
 unzip -d datasets/video_jpegs/ datasets/video_jpegs.zip
