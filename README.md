@@ -4,6 +4,11 @@ git clone https://github.com/alhais/DeepLearning.git
 
 cd DeepLearning
 
+## Generate Train Data
+!python 
+
+
+
 unzip -d datasets/video_jpegs/ datasets/video_jpegs.zip
 
 ## Generate edge images
