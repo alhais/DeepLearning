@@ -102,6 +102,6 @@ for x in range(n_frames):
     #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
     count += 1
     
-from google.colab import files
-import os
-files.download(os.getcwd() + '/DeepLearning/datasets/train/' + "100_emg.jpg")
+#from google.colab import files
+#import os
+#files.download(os.getcwd() + '/DeepLearning/datasets/train/' + "100_emg.jpg")
