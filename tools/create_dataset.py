@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 
 print(cv2.__version__)
+os.makedirs(os.getcwd() + '/DeepLearning/datasets/train')
 
 emg0,emg1,emg2,emg3,emg4,emg5,emg6,emg7 = ([] for i in range(8))
 
