@@ -1,4 +1,5 @@
 ## Generate Train Data
+```ruby
 %cd /content
 !rm -r DeepLearning
 !git clone https://github.com/alhais/DeepLearning.git
@@ -9,6 +10,7 @@ owd = os.getcwd()
 os.chdir(os.getcwd() + '/DeepLearning/datasets/train')
 files.download('100.jpg')
 os.chdir(owd)
+```
 
 
 
