@@ -1,5 +1,6 @@
 ## Generate Train Data
 ```ruby
+!pip install python_speech_features
 %cd /content
 !rm -r DeepLearning
 !git clone https://github.com/alhais/DeepLearning.git
@@ -9,6 +10,7 @@ import os
 owd = os.getcwd()
 os.chdir(os.getcwd() + '/DeepLearning/datasets/train')
 files.download('100.jpg')
+files.download('100_emg.jpg')
 os.chdir(owd)
 ```
 
