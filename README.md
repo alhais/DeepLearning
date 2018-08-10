@@ -1,3 +1,19 @@
+## Generate Train Data
+%cd /content
+!rm -r DeepLearning
+!git clone https://github.com/alhais/DeepLearning.git
+!python DeepLearning/tools/create_dataset.py
+from google.colab import files
+import os
+owd = os.getcwd()
+os.chdir(os.getcwd() + '/DeepLearning/datasets/train')
+files.download('100.jpg')
+os.chdir(owd)
+
+
+
+
+
 # Get dataset and code 
 
 git clone https://github.com/alhais/DeepLearning.git
