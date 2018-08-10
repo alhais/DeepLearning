@@ -9,11 +9,12 @@ count = 0
 success = True
 os.makedirs(os.getcwd() + '/DeepLearning/datasets/train')
 while success:
-  edges = cv2.Canny(image,100,200)
-  color_edges = cv2.cvtColor(edges, 8)
-  vis = np.concatenate((image, color_edges), axis=1)
-  resized_image = cv2.resize(vis, (512, 256)) 
-  cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg" % count, resized_image)     # save frame as JPEG file
+  #edges = cv2.Canny(image,100,200)
+  #color_edges = cv2.cvtColor(edges, 8)
+  #vis = np.concatenate((image, color_edges), axis=1)
+  #resized_image = cv2.resize(vis, (512, 256)) 
+  #cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg" % count, resized_image)     # save frame as JPEG file
+  cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg" % count, image)     # save frame as JPEG file
   success,image = vidcap.read()
   count += 1
-shutil.copytree(os.getcwd() + '/DeepLearning/datasets/train/',os.getcwd() + '/pix2pix-tensorflow/facades/train')
+#shutil.copytree(os.getcwd() + '/DeepLearning/datasets/train/',os.getcwd() + '/pix2pix-tensorflow/facades/train')
