@@ -49,7 +49,7 @@ class DataLoader():
         pathA = glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type))
         pathB = glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type))
 
-        self.n_batches = int(len(path) / batch_size)
+        self.n_batches = int(len(pathA) / batch_size)
 
         for i in range(self.n_batches-1):
             batch = pathA[i*batch_size:(i+1)*batch_size]
