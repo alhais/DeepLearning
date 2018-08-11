@@ -131,7 +131,7 @@ class Pix2Pix():
         u5 = deconv2d(u4, d2, 64*2)
         u6 = deconv2d(u5, d1, 64)
 
-        u7 = UpSampling2D(size=4)(u6)
+        u7 = UpSampling2D(size=8)(u6)
         output_img = Conv2D(3, kernel_size=4, strides=1, padding='same', activation='tanh')(u7)
         
         return  Model([d0,e0], output_img)
