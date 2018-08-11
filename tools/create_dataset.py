@@ -99,8 +99,8 @@ count = 0
 for x in range(int(n_frames/2)):
   success,image = vidcap.read()
   if success:
-    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/train/' + "%d_emg.jpg" % count, chuncks[:,:,x])
-    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/train/' + "%d.jpg" % count, image)
+    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/train/' + "%d_emg.jpg" % count, chuncks[:,:,x])
+    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/train/' + "%d.jpg" % count, image)
     #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
     count += 1
 count = 0
