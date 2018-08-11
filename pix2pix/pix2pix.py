@@ -62,7 +62,7 @@ class Pix2Pix():
         img_B = Input(shape=self.img_shape)
 
         # By conditioning on B generate a fake version of A
-        fake_A = self.generator(I,img_B)
+        fake_A = self.generator([I,img_B])
 
         # For the combined model we will only train the generator
         self.discriminator.trainable = False
