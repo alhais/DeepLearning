@@ -56,34 +56,31 @@ class DataLoader():
             imgs_A = []
             for img in batch:
                 img_A = self.imread(img)
-
                 img_A = scipy.misc.imresize(img_A, self.img_res)
-
-
                 if not is_testing and np.random.random() > 0.5:
-                        img_A = np.fliplr(img_A)
-                        
-
+                        img_A = np.fliplr(img_A)                    
                 imgs_A.append(img_A)
+                
             imgs_A = np.array(imgs_A)/127.5 - 1.
-            yield  imgs_A
             
-        for i in range(self.n_batches-1):
+            batch = pathB[i*batch_size:(i+1)*batch_size]
+            imgs_B = []
+            
+            for i in range(self.n_batches-1):
             batch = pathB[i*batch_size:(i+1)*batch_size]
             imgs_B = []
             for img in batch:
                 img_B = self.imread(img)
-
                 img_B = scipy.misc.imresize(img_B, self.img_res)
-
-
                 if not is_testing and np.random.random() > 0.5:
-                        img_B = np.fliplr(img_B)
-                        
-
+                        img_B = np.fliplr(img_B)          
                 imgs_B.append(img_B)
+                
             imgs_B = np.array(imgs_B)/127.5 - 1.
-            yield  imgs_B
+            
+            yield imgs_A, imgs_B
+            
+
 
 
     def imread(self, path):
