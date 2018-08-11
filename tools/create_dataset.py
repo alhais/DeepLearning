@@ -96,7 +96,7 @@ for i in range(0,numOfChunks*step,step):
 #print(mfcc_data[:,0:0+winSize])
 #print(mcc_length,n_frames)
 count = 0
-for x in range(n_frames/2):
+for x in range(int(n_frames/2)):
   success,image = vidcap.read()
   if success:
     cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/train/' + "%d_emg.jpg" % count, chuncks[:,:,x])
@@ -104,7 +104,7 @@ for x in range(n_frames/2):
     #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
     count += 1
 count = 0
-for x in range(n_frames/2):
+for x in range(int(n_frames/2)):
   success,image = vidcap.read()
   if success:
     cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/test/' + "%d_emg.jpg" % count, chuncks[:,:,x])
