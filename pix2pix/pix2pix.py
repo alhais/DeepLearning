@@ -227,6 +227,7 @@ class Pix2Pix():
 
                 # Condition on B and generate a translated version
                 #Change for a constant I image
+                imgs_I = []
                 for x in range(imgs_A.shape[0]):
                     imgs_I.append(imgs_A[0])
                 imgs_I = np.array(imgs_I)
@@ -261,6 +262,7 @@ class Pix2Pix():
         r, c = 3, 3
 
         imgs_A, imgs_B = self.data_loader.load_data(batch_size=3, is_testing=True)
+        imgs_I = []
         for x in range(imgs_A.shape[0]):
             imgs_I.append(imgs_A[0])
         imgs_I = np.array(imgs_I)
