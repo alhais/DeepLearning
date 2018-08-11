@@ -8,8 +8,8 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 
 print(cv2.__version__)
-os.makedirs(os.getcwd() + '/DeepLearning/datasets/facades/train')
-os.makedirs(os.getcwd() + '/DeepLearning/datasets/facades/test')
+os.makedirs(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/train')
+os.makedirs(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/test')
 
 emg0,emg1,emg2,emg3,emg4,emg5,emg6,emg7 = ([] for i in range(8))
 
@@ -107,8 +107,8 @@ count = 0
 for x in range(int(n_frames/2)):
   success,image = vidcap.read()
   if success:
-    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/test/' + "%d_emg.jpg" % count, chuncks[:,:,x])
-    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/test/' + "%d.jpg" % count, image)
+    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/test/' + "%d_emg.jpg" % count, chuncks[:,:,x])
+    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/test/' + "%d.jpg" % count, image)
     #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
     count += 1
     
