@@ -11,11 +11,12 @@ class DataLoader():
 
     def load_data(self, batch_size=1, is_testing=False):
         data_type = "train" if not is_testing else "test"
-        batch_images_A =sorted(glob.glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
-        batch_images_B =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
+        pathA =sorted(glob.glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
+        pathB =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
 
 
-        #batch_images = np.random.choice(path, size=batch_size)
+        batch_images_A = np.random.choice(pathA, size=batch_size)
+        batch_images_B = np.random.choice(pathB, size=batch_size)
 
         imgs_A = []
         imgs_B = []
