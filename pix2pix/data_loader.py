@@ -28,7 +28,7 @@ class DataLoader():
 
             imgs_A.append(img_A)
             
-         for img_path in batch_images_B:
+        for img_path in batch_images_B:
             img_B = self.imread(img_path)
             img_B = scipy.misc.imresize(img_B, self.img_res)
 
