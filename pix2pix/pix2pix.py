@@ -227,7 +227,10 @@ class Pix2Pix():
 
                 # Condition on B and generate a translated version
                 #Change for a constant I image
-                fake_A = self.generator.predict([imgs_A,imgs_B])
+                for x in range(imgs_A.shape[0]):
+                    imgs_I.append(imgs_A[0])
+                imgs_I = np.array(imgs_I)
+                fake_A = self.generator.predict([imgs_I,imgs_B])
 
                 # Train the discriminators (original images = real / generated = Fake)
                 d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], valid)
@@ -239,7 +242,7 @@ class Pix2Pix():
                 # -----------------
 
                 # Train the generators
-                g_loss = self.combined.train_on_batch([imgs_A, imgs_A, imgs_B], [valid, imgs_A])
+                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, imgs_A])
 
                 elapsed_time = datetime.datetime.now() - start_time
                 # Plot the progress
@@ -258,7 +261,10 @@ class Pix2Pix():
         r, c = 3, 3
 
         imgs_A, imgs_B = self.data_loader.load_data(batch_size=3, is_testing=True)
-        fake_A = self.generator.predict([imgs_A,imgs_B])
+        for x in range(imgs_A.shape[0]):
+            imgs_I.append(imgs_A[0])
+        imgs_I = np.array(imgs_I)
+        fake_A = self.generator.predict([imgs_I,imgs_B])
 
         gen_imgs = np.concatenate([imgs_B, fake_A, imgs_A])
 
