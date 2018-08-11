@@ -66,7 +66,7 @@ class DataLoader():
             batch = pathB[i*batch_size:(i+1)*batch_size]
             imgs_B = []
             
-            for i in range(self.n_batches-1):
+            
             batch = pathB[i*batch_size:(i+1)*batch_size]
             imgs_B = []
             for img in batch:
