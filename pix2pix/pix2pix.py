@@ -226,7 +226,8 @@ class Pix2Pix():
                 # ---------------------
 
                 # Condition on B and generate a translated version
-                fake_A = self.generator.predict([imgs_A[0],imgs_B])
+                #Change for a constant I image
+                fake_A = self.generator.predict([imgs_A,imgs_B])
 
                 # Train the discriminators (original images = real / generated = Fake)
                 d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], valid)
