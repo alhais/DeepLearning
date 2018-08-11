@@ -42,7 +42,7 @@ class DataLoader():
             imgs_B.append(img_B)
 
         imgs_B = np.array(imgs_B)/127.5 - 1.
-
+        
         return imgs_A, imgs_B
 
     def load_batch(self, batch_size=1, is_testing=False):
