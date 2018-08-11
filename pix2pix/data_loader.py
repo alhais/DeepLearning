@@ -15,8 +15,10 @@ class DataLoader():
         pathB =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
 
 
-        batch_images_A = np.random.choice(pathA, size=batch_size)
-        batch_images_B = np.random.choice(pathB, size=batch_size)
+        #batch_images_A = np.random.choice(pathA, size=batch_size)
+        #batch_images_B = np.random.choice(pathB, size=batch_size)
+        batch_images_A = pathA[10]
+        batch_images_B = pathB[10]
 
         imgs_A = []
         imgs_B = []
@@ -33,7 +35,7 @@ class DataLoader():
             
         for img_path in batch_images_B:
             img_B = self.imread(img_path)
-            img_B = scipy.misc.imresize(img_B, self.img_res)
+            #img_B = scipy.misc.imresize(img_B, self.img_res)
 
             # If training => do random flip
             if not is_testing and np.random.random() < 0.5:
