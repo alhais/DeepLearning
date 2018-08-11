@@ -15,10 +15,8 @@ class DataLoader():
         pathB =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
 
 
-        #batch_images_A = np.random.choice(pathA, size=batch_size)
-        #batch_images_B = np.random.choice(pathB, size=batch_size)
-        batch_images_A = pathA[10]
-        batch_images_B = pathB[10]
+        batch_images_A = np.random.choice(pathA, size=batch_size)
+        batch_images_B = np.random.choice(pathB, size=batch_size)
 
         imgs_A = []
         imgs_B = []
