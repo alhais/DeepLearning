@@ -33,7 +33,8 @@ class DataLoader():
             
         for img_path in batch_images_B:
             img_B = self.imread(img_path)
-            img_B = scipy.misc.imresize(img_B, self.img_res)
+            #img_B = scipy.misc.imresize(img_B, self.img_res)
+            img_B = cv2.resize(img_B.astype('uint8'),(self.img_res), interpolation=cv2.INTER_NEAREST)
 
             # If training => do random flip
             if not is_testing and np.random.random() < 0.5:
@@ -68,7 +69,8 @@ class DataLoader():
             imgs_B = []
             for img in batch:
                 img_B = self.imread(img)
-                img_B = scipy.misc.imresize(img_B, self.img_res)
+                #img_B = scipy.misc.imresize(img_B, self.img_res)
+                img_B = cv2.resize(img_B.astype('uint8'),(self.img_res), interpolation=cv2.INTER_NEAREST)
                 if not is_testing and np.random.random() > 0.5:
                         img_B = np.fliplr(img_B)          
                 imgs_B.append(img_B)
