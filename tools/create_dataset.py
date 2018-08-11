@@ -97,7 +97,7 @@ for i in range(0,numOfChunks*step,step):
 #print(chuncks[:,:,0])
 #print(mfcc_data[:,0:0+winSize])
 #print(mcc_length,n_frames)
-b = numpy.zeros([mfcc_data.shape[0],winSize,numOfChunks,3],dtype=np.uint8)
+b = numpy.zeros([mfcc_data.shape[0],winSize,3],dtype=np.uint8)
 count = 0
 for x in range(1,int(n_frames/2)):
   success,image = vidcap.read()
