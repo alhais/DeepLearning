@@ -2,6 +2,7 @@ import scipy
 from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
+import os, glob
 
 class DataLoader():
     def __init__(self, dataset_name, img_res=(128, 128)):
@@ -10,8 +11,8 @@ class DataLoader():
 
     def load_data(self, batch_size=1, is_testing=False):
         data_type = "train" if not is_testing else "test"
-        batch_images_A = glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type))
-        batch_images_B = glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type))
+        batch_images_A =sorted(glob.glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
+        batch_images_B =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
 
 
         #batch_images = np.random.choice(path, size=batch_size)
@@ -46,8 +47,8 @@ class DataLoader():
 
     def load_batch(self, batch_size=1, is_testing=False):
         data_type = "train" if not is_testing else "val"
-        pathA = glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type))
-        pathB = glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type))
+        pathA =sorted(glob.glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
+        pathB =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
 
         self.n_batches = int(len(pathA) / batch_size)
 
