@@ -28,6 +28,7 @@ class DataLoader():
                 img_A = np.fliplr(img_A)
 
             imgs_A.append(img_A)
+        imgs_A = np.array(imgs_A)/127.5 - 1.
             
         for img_path in batch_images_B:
             img_B = self.imread(img_path)
@@ -38,9 +39,7 @@ class DataLoader():
                 img_B = np.fliplr(img_B)
 
             imgs_B.append(img_B)
-            
 
-        imgs_A = np.array(imgs_A)/127.5 - 1.
         imgs_B = np.array(imgs_B)/127.5 - 1.
 
         return imgs_A, imgs_B
@@ -66,6 +65,9 @@ class DataLoader():
                         
 
                 imgs_A.append(img_A)
+            imgs_A = np.array(imgs_A)/127.5 - 1.
+            yield  imgs_A
+            
         for i in range(self.n_batches-1):
             batch = pathB[i*batch_size:(i+1)*batch_size]
             imgs_B = []
@@ -80,12 +82,8 @@ class DataLoader():
                         
 
                 imgs_B.append(img_B)
-                
-
-            imgs_A = np.array(imgs_A)/127.5 - 1.
             imgs_B = np.array(imgs_B)/127.5 - 1.
-
-            yield imgs_A, imgs_B
+            yield  imgs_B
 
 
     def imread(self, path):
