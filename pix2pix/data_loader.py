@@ -59,9 +59,7 @@ class DataLoader():
             imgs_A = []
             for img in batch:
                 img_A = self.imread(img)
-                img_A = scipy.misc.imresize(img_A, self.img_res)
-                if not is_testing and np.random.random() > 0.5:
-                        img_A = np.fliplr(img_A)                    
+                img_A = scipy.misc.imresize(img_A, self.img_res)                  
                 imgs_A.append(img_A)
                 
             imgs_A = np.array(imgs_A)/127.5 - 1.
@@ -71,9 +69,7 @@ class DataLoader():
             for img in batch:
                 img_B = self.imread(img)
                 #img_B = scipy.misc.imresize(img_B, self.img_res)
-                img_B = cv2.resize(img_B.astype('uint8'),(self.img_res), interpolation=cv2.INTER_NEAREST)
-                if not is_testing and np.random.random() > 0.5:
-                        img_B = np.fliplr(img_B)          
+                img_B = cv2.resize(img_B.astype('uint8'),(self.img_res), interpolation=cv2.INTER_NEAREST)         
                 imgs_B.append(img_B)
                 
             imgs_B = np.array(imgs_B)/127.5 - 1.
