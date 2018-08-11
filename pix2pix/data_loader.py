@@ -61,7 +61,7 @@ class DataLoader():
                         img_A = np.fliplr(img_A)                    
                 imgs_A.append(img_A)
                 
-            #imgs_A = np.array(imgs_A)/127.5 - 1.
+            imgs_A = np.array(imgs_A)/127.5 - 1.
             
             batch = pathB[i*batch_size:(i+1)*batch_size]
             imgs_B = []
@@ -72,7 +72,7 @@ class DataLoader():
                         img_B = np.fliplr(img_B)          
                 imgs_B.append(img_B)
                 
-            #imgs_B = np.array(imgs_B)/127.5 - 1.
+            imgs_B = np.array(imgs_B)/127.5 - 1.
             
             yield imgs_A, imgs_B
             
