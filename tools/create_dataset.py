@@ -8,7 +8,8 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 
 print(cv2.__version__)
-os.makedirs(os.getcwd() + '/DeepLearning/datasets/train')
+os.makedirs(os.getcwd() + '/DeepLearning/datasets/facades/train')
+os.makedirs(os.getcwd() + '/DeepLearning/datasets/facades/test')
 
 emg0,emg1,emg2,emg3,emg4,emg5,emg6,emg7 = ([] for i in range(8))
 
@@ -95,11 +96,19 @@ for i in range(0,numOfChunks*step,step):
 #print(mfcc_data[:,0:0+winSize])
 #print(mcc_length,n_frames)
 count = 0
-for x in range(n_frames):
+for x in range(n_frames/2):
   success,image = vidcap.read()
   if success:
-    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/train/' + "%d_emg.jpg" % count, chuncks[:,:,x])
-    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg" % count, image)
+    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/train/' + "%d_emg.jpg" % count, chuncks[:,:,x])
+    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/train/' + "%d.jpg" % count, image)
+    #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
+    count += 1
+    count = 0
+for x in range(n_frames/2):
+  success,image = vidcap.read()
+  if success:
+    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/test/' + "%d_emg.jpg" % count, chuncks[:,:,x])
+    cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/test/' + "%d.jpg" % count, image)
     #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
     count += 1
     
