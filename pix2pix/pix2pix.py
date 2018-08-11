@@ -157,7 +157,7 @@ class Pix2Pix():
         h = BatchNormalization()(h)
         h = Activation('relu')(h)
         #2 Deconv,BN,ReLU
-        h = Reshape((4, 4, 1568))(h)
+        h = Reshape((8, 8, 392))(h)
         h = Conv2DTranspose(filters=512, kernel_size=(5),\
         strides=(2,2), padding='SAME')(h)
         h = BatchNormalization()(h)
