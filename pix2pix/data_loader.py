@@ -3,6 +3,7 @@ from glob import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import os, glob
+import cv2
 
 class DataLoader():
     def __init__(self, dataset_name, img_res=(128, 128)):
