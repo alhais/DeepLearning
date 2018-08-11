@@ -77,9 +77,6 @@ class Pix2Pix():
 
     def build_generator(self):
         """U-Net Generator"""
-"""U-Net Generator"""
-
-         #@title Image Encoder
         input_img = Input(shape=self.img_shape)
         # 1 Conv,BN,ReLU
         h = Conv2D(filters=64, kernel_size=(5),\
@@ -182,8 +179,8 @@ class Pix2Pix():
         h = Conv2DTranspose(filters=3, kernel_size=(5),\
         strides=(2,2), padding='SAME')(h)
         DecoderOut = Activation('tanh')(h)
-       
-        
+
+
         return Model([input_img, input_EMG ], DecoderOut)
 
     def build_discriminator(self):
