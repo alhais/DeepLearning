@@ -3,7 +3,9 @@ import scipy
 
 from keras.datasets import mnist
 from keras_contrib.layers.normalization import InstanceNormalization
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Concatenate
+from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Concatenate, Conv2DTranspose
+from keras.layers.merge import Concatenate
+from keras.layers.recurrent import GRU
 from keras.layers import BatchNormalization, Activation, ZeroPadding2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
