@@ -103,7 +103,7 @@ for x in range(n_frames/2):
     cv2.imwrite(os.getcwd() + '/DeepLearning/datasets/facades/train/' + "%d.jpg" % count, image)
     #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
     count += 1
-    count = 0
+count = 0
 for x in range(n_frames/2):
   success,image = vidcap.read()
   if success:
