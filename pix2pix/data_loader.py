@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os, glob
 import cv2
+from numpy import random
 
 class DataLoader():
     def __init__(self, dataset_name, img_res=(128, 128)):
@@ -14,7 +15,10 @@ class DataLoader():
         data_type = "train" if not is_testing else "test"
         pathA =sorted(glob.glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
         pathB =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
-       
+        
+        seq_array = list(range(batch_size))
+        rd_array = random.choice(seq_array, size=batch_size, replace=False)   
+    
         batch_images_A = []
         batch_images_B = []
         for x in range(batch_size):
