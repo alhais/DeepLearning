@@ -97,14 +97,115 @@ class Pix2Pix():
             u = Concatenate()([u, skip_input])
             return u
 
-        # Image input
-        d0 = Input(shape=self.img_shape)
-        z0 = Input(shape=self.img_shape)
-        u = Concatenate()([d0, z0])
+                #@title Image Encoder
+        input_img = Input(shape=(256, 256,3))
+        # 1 Conv,BN,ReLU
+        h = Conv2D(filters=64, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(input_img)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 2 Conv,BN,ReLU
+        h = Conv2D(filters=128, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 3 Conv,BN,ReLU
+        h = Conv2D(filters=256, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 4 Conv,BN,ReLU
+        h = Conv2D(filters=512, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 5 FC,BN,ReLU
+        h = Flatten()(h)
+        h = Dense(512)(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 6 FC
+        image = Dense(256)(h)
+
+        #model = Model(input_img, image)
+        #model.summary()
+
+        #@title EEG Encoder
+        input_EMG = Input(shape=(256, 256, 3))
+        # 1 Conv,BN,ReLU
+        h = Conv2D(filters=64, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(input_EMG)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 2 Conv,BN,ReLU
+        h = Conv2D(filters=128, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 3 Conv,BN,ReLU
+        h = Conv2D(filters=256, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 4 Conv,BN,ReLU
+        h = Conv2D(filters=512, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 5 FC,BN,ReLU
+        h = Flatten()(h)
+        h = Dense(512)(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        # 6 FC,BN,ReLU
+        EMG = Dense(256)(h)
+
+
+        #model = Model(input_EMG, EMG)
+        #model.summary()
+
+        #Concate output, is the input of GRU
+        GRU_input = concatenate([image, EMG])
+        GRU_input = Reshape((1, 512))(GRU_input)
+        GRU_output = GRU(512, recurrent_initializer="orthogonal")(GRU_input)
+
+
+        #Decoder
+        #1 FC,BN,ReLU
+        h = Dense(25088)(GRU_output)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        #2 Deconv,BN,ReLU
+        h = Reshape((8, 8, 392))(h)
+        h = Conv2DTranspose(filters=512, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        #3 Deconv,BN,ReLU
+        h = Conv2DTranspose(filters=256, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        #4 Deconv,BN,ReLU
+        h = Conv2DTranspose(filters=128, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        #5 Deconv,BN,ReLU
+        h = Conv2DTranspose(filters=32, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        h = BatchNormalization()(h)
+        h = Activation('relu')(h)
+        #Output Deconv,Tanh
+        h = Conv2DTranspose(filters=3, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(h)
+        DecoderOut = Activation('tanh')(h)
+        #Wrong dimension compared to the article (article:112X112X3 Here:224X224X3 )
+
 
 
         # Downsampling
-        d1 = conv2d(u, self.gf, bn=False)
+        d1 = conv2d(DecoderOut, self.gf, bn=False)
         d2 = conv2d(d1, self.gf*2)
         d3 = conv2d(d2, self.gf*4)
         d4 = conv2d(d3, self.gf*8)
@@ -123,7 +224,7 @@ class Pix2Pix():
         u7 = UpSampling2D(size=2)(u6)
         output_img = Conv2D(self.channels, kernel_size=4, strides=1, padding='same', activation='tanh')(u7)
 
-        return Model([d0, z0 ], output_img)
+        return Model([input_img, input_EMG], output_img)
 
     def build_discriminator(self):
 
