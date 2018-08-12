@@ -167,12 +167,12 @@ class Pix2Pix():
         #Concate output, is the input of GRU
         GRU_input = concatenate([image, EMG])
         GRU_input = Reshape((1, 512))(GRU_input)
-        #GRU_output = GRU(512, recurrent_initializer="orthogonal")(GRU_input)
+        GRU_output = GRU(512, recurrent_initializer="orthogonal")(GRU_input)
 
 
         #Decoder
         #1 FC,BN,ReLU
-        h = Dense(25088)(GRU_input)
+        h = Dense(25088)(GRU_output)
         h = BatchNormalization()(h)
         h = Activation('relu')(h)
         #2 Deconv,BN,ReLU
