@@ -14,21 +14,18 @@ class DataLoader():
         data_type = "train" if not is_testing else "test"
         pathA =sorted(glob.glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
         pathB =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
-
-
-        batch_images_A = np.random.choice(pathA, size=batch_size)
-        batch_images_B = np.random.choice(pathB, size=batch_size)
+       
+        batch_images_A = []
+        batch_images_B = []
+        for x in range(batch_size):
+            batch_images_A.append(pathA[rd_array[x]])
+            batch_images_B.append(pathB[rd_array[x]])
 
         imgs_A = []
         imgs_B = []
         for img_path in batch_images_A:
             img_A = self.imread(img_path)
             img_A = scipy.misc.imresize(img_A, self.img_res)
-
-            # If training => do random flip
-            if not is_testing and np.random.random() < 0.5:
-                img_A = np.fliplr(img_A)
-
             imgs_A.append(img_A)
         imgs_A = np.array(imgs_A)/127.5 - 1.
             
@@ -36,11 +33,6 @@ class DataLoader():
             img_B = self.imread(img_path)
             #img_B = scipy.misc.imresize(img_B, self.img_res)
             img_B = cv2.resize(img_B.astype('uint8'),(self.img_res), interpolation=cv2.INTER_NEAREST)
-
-            # If training => do random flip
-            if not is_testing and np.random.random() < 0.5:
-                img_B = np.fliplr(img_B)
-
             imgs_B.append(img_B)
 
         imgs_B = np.array(imgs_B)/127.5 - 1.
