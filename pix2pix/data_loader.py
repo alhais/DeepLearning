@@ -16,12 +16,12 @@ class DataLoader():
         pathA =sorted(glob.glob('./datasets/%s/%s/A/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
         pathB =sorted(glob.glob('./datasets/%s/%s/B/*' % (self.dataset_name, data_type)), key=os.path.getmtime)
         
-        seq_array = list(range(batch_size))
-        rd_array = random.choice(seq_array, size=batch_size, replace=False)   
+        seq_array = list(range(len(pathA)))
+        rd_array = random.choice(seq_array, size=len(pathA), replace=False)   
     
         batch_images_A = []
         batch_images_B = []
-        for x in range(batch_size):
+        for x in range(len(pathA)):
             batch_images_A.append(pathA[rd_array[x]])
             batch_images_B.append(pathB[rd_array[x]])
 
