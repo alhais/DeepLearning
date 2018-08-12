@@ -98,7 +98,7 @@ class Pix2Pix():
             return u
 
                 #@title Image Encoder
-        input_img = Input(shape=(256, 256,3))
+        input_img = Input(shape=self.img_shape)
         # 1 Conv,BN,ReLU
         h = Conv2D(filters=64, kernel_size=(5),\
         strides=(2,2), padding='SAME')(input_img)
@@ -131,7 +131,7 @@ class Pix2Pix():
         #model.summary()
 
         #@title EEG Encoder
-        input_EMG = Input(shape=(256, 256, 3))
+        input_EMG = Input(shape=self.img_shape)
         # 1 Conv,BN,ReLU
         h = Conv2D(filters=64, kernel_size=(5),\
         strides=(2,2), padding='SAME')(input_EMG)
