@@ -199,13 +199,13 @@ class Pix2Pix():
         #Output Deconv,Tanh
         h = Conv2DTranspose(filters=3, kernel_size=(5),\
         strides=(2,2), padding='SAME')(h)
-        DecoderOut = Activation('tanh')(h)
+        #DecoderOut = Activation('tanh')(h)
         #Wrong dimension compared to the article (article:112X112X3 Here:224X224X3 )
 
 
 
         # Downsampling
-        d1 = conv2d(DecoderOut, self.gf, bn=False)
+        d1 = conv2d(h, self.gf, bn=False)
         d2 = conv2d(d1, self.gf*2)
         d3 = conv2d(d2, self.gf*4)
         d4 = conv2d(d3, self.gf*8)
