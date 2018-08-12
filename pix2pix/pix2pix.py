@@ -3,7 +3,7 @@ import scipy
 
 from keras.datasets import mnist
 from keras_contrib.layers.normalization import InstanceNormalization
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Concatenate, Conv2DTranspose, concatenate
+from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Concatenate, Conv2DTranspose, concatenate, add
 from keras.layers.merge import Concatenate
 from keras.layers.recurrent import GRU
 from keras.layers import BatchNormalization, Activation, ZeroPadding2D
