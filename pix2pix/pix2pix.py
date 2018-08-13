@@ -63,13 +63,13 @@ class Pix2Pix():
         img_B = Input(shape=self.img_shape)
 
         # By conditioning on B generate a fake version of A
-        [fake_A, Z0] = self.generator([I,img_B])
+        [I0, Z0] = self.generator([I,img_B])
 
         # For the combined model we will only train the generator
         self.discriminator.trainable = False
 
         # Discriminators determines validity of translated images / condition pairs
-        valid = self.discriminator([fake_A, Z0])
+        valid = self.discriminator([I0, Z0])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, fake_A])
         self.combined.compile(loss=['mse', 'mae'],
