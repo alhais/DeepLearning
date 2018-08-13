@@ -207,9 +207,6 @@ class Pix2Pix():
         h = Reshape((256,256,3))(h)
         combined_imgs = Concatenate(axis=-1)([img_A, h])
 
-        # Concatenate image and conditioning image by channels to produce input
-        combined_imgs = Concatenate(axis=-1)([img_A, img_B])
-
         d1 = d_layer(combined_imgs, self.df, bn=False)
         d2 = d_layer(d1, self.df*2)
         d3 = d_layer(d2, self.df*4)
