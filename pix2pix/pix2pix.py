@@ -187,8 +187,9 @@ class Pix2Pix():
         #Wrong dimension compared to the article (article:112X112X3 Here:224X224X3 )
 
 
-
-        return Model([input_img, input_EMG ], DecoderOut), Model([input_EMG], EMG)
+        fake_A_model = Model([input_img, input_EMG ], DecoderOut)
+        Z0_model = Model([input_EMG], EMG)
+        return fake_A_model, Z0_model
 
     def build_discriminator(self):
 
