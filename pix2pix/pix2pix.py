@@ -235,13 +235,13 @@ class Pix2Pix():
         # Rescale images 0 - 1
         gen_imgs = 0.5 * gen_imgs + 0.5
         
-        titles = ['Condition', 'Generated', 'Original']
+        titles = ['EMG MFFC', 'Generated', 'Original']
         fig, axs = plt.subplots(r, c)
         cnt = 0
         for i in range(r):
             for j in range(c):
                 axs[i,j].imshow(gen_imgs[cnt])
-                axs[i, j].set_title(titles[i],fontsize=8)
+                axs[i, j].set_title(titles[i],fontsize=5)
                 axs[i,j].axis('off')
                 cnt += 1
         fig.savefig("images/%s/%d_%d.png" % (self.dataset_name, epoch, batch_i))
