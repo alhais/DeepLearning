@@ -158,10 +158,10 @@ class Pix2Pix():
         
        
         h =Reshape((8, 8, 4))(Z)
-        d = Conv2D(df*4, kernel_size=4, strides=2, padding='same')(h)
+        d = Conv2D(self.df*4, kernel_size=4, strides=2, padding='same')(h)
         d = LeakyReLU(alpha=0.2)(d)
 
-        d = Conv2D(df*2, kernel_size=1, strides=1, padding='same')(d)
+        d = Conv2D(self.df*2, kernel_size=1, strides=1, padding='same')(d)
         d = LeakyReLU(alpha=0.2)(d)
         d = BatchNormalization(momentum=0.8)(d)
 
