@@ -156,9 +156,17 @@ class Pix2Pix():
         
         validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
         
-        e1 = d_layer(Z, self.df, bn=False)
-        e2 = d_layer(e1, self.df*2)
-        match = Conv2D(1, kernel_size=1, strides=1, padding='valid')(e2)
+       
+        h =Reshape((8, 8, 4))(Z)
+        d = Conv2D(df*4, kernel_size=4, strides=2, padding='same')(h)
+        d = LeakyReLU(alpha=0.2)(d)
+
+        d = Conv2D(df*2, kernel_size=1, strides=1, padding='same')(d)
+        d = LeakyReLU(alpha=0.2)(d)
+        d = BatchNormalization(momentum=0.8)(d)
+
+    
+        match = Conv2D(1, kernel_size=4, strides=2, padding='valid')(d)
 
 
         return Model([img_A, Z], [validity, match])
