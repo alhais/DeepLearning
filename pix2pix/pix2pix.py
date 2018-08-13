@@ -69,11 +69,11 @@ class Pix2Pix():
         self.discriminator.trainable = False
 
         # Discriminators determines validity of translated images / condition pairs
-        valid = self.discriminator([I0, Z0])
+        [valid, match] = self.discriminator([I0, Z0])
 
-        self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, I0, Z0])
-        self.combined.compile(loss=['mse', 'mae', 'mae'],
-                              loss_weights=[1, 100, 100],
+        self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
+        self.combined.compile(loss=['mse', 'mse','mae', 'mae'],
+                              loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
 
     def build_generator(self):
@@ -149,18 +149,19 @@ class Pix2Pix():
         img_A = Input(shape=self.img_shape)
         Z = Input(shape=(256,))
 
-        h = Dense(196608)(Z)
-        h = Reshape((256,256,3))(h)
-        combined_imgs = Concatenate(axis=-1)([img_A, h])
-
-        d1 = d_layer(combined_imgs, self.df, bn=False)
+        d1 = d_layer(img_A, self.df, bn=False)
         d2 = d_layer(d1, self.df*2)
         d3 = d_layer(d2, self.df*4)
         d4 = d_layer(d3, self.df*8)
-
+        
         validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
+        
+        e1 = d_layer(Z, self.df, bn=False)
+        e2 = d_layer(e1, self.df*2)
+        match = Conv2D(1, kernel_size=1, strides=1, padding='valid')(e2)
 
-        return Model([img_A, Z], validity)
+
+        return Model([img_A, Z], [validity, match])
 
     def train(self, epochs, batch_size=1, sample_interval=50):
 
@@ -186,7 +187,7 @@ class Pix2Pix():
                 [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
 
                 # Train the discriminators (original images = real / generated = Fake)
-                d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], valid)
+                d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
                 d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], fake)
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
@@ -195,7 +196,7 @@ class Pix2Pix():
                 # -----------------
 
                 # Train the generators
-                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, imgs_A, Z0])
+                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
 
                 elapsed_time = datetime.datetime.now() - start_time
                 # Plot the progress
