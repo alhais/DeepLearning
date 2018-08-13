@@ -107,7 +107,7 @@ class Pix2Pix():
         
         # Image input
         input_img = Input(shape=self.img_shape)
-        input_concat = Concatenate()([input_img, input_EMG])
+        input_concat = add()([input_img, input_EMG])
 
         # Downsampling
         d1 = conv2d(input_concat, self.gf, bn=False)
