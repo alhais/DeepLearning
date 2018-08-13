@@ -72,7 +72,7 @@ class Pix2Pix():
         valid = self.discriminator([I0, Z0])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, I0, Z0])
-        self.combined.compile(loss=['mse', 'mae'],
+        self.combined.compile(loss=['mse', 'mae', 'mae'],
                               loss_weights=[1, 100],
                               optimizer=optimizer)
 
