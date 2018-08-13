@@ -148,27 +148,25 @@ class Pix2Pix():
             return d
 
         img_A = Input(shape=self.img_shape)
-        Z = Input(shape=(256,))
+        d1 = d_layer(img_A, self.gf, bn=False)
+        d2 = d_layer(d1, self.gf*2)
+        d3 = d_layer(d2, self.gf*4)
+        d4 = d_layer(d3, self.gf*8)
 
-        d1 = d_layer(img_A, self.df, bn=False)
-        d2 = d_layer(d1, self.df*2)
-        d3 = d_layer(d2, self.df*4)
-        d4 = d_layer(d3, self.df*8)
-        
         validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
-        
-       
-        h =Reshape((8, 8, 4))(Z)
-        d = Conv2D(self.df*4, kernel_size=4, strides=2, padding='same')(h)
+
+        Z = Input(shape=(256,))
+        h =Reshape((16, 16, 1))(Z)
+        h = Concatenate()([validity, h])
+        d = Conv2D(self.gf*8, kernel_size=4, strides=2, padding='same')(h)
         d = LeakyReLU(alpha=0.2)(d)
 
-        d = Conv2D(self.df*2, kernel_size=1, strides=1, padding='same')(d)
+        d = Conv2D(self.gf*4, kernel_size=1, strides=1, padding='same')(d)
         d = LeakyReLU(alpha=0.2)(d)
         d = BatchNormalization(momentum=0.8)(d)
 
-    
-        match = Conv2D(1, kernel_size=4, strides=2, padding='valid')(d)
 
+        match = Conv2D(1, kernel_size=4, strides=2, padding='valid')(d)
 
         return Model([img_A, Z], [validity, match])
 
@@ -178,8 +176,8 @@ class Pix2Pix():
 
         # Adversarial loss ground truths
         valid = np.ones((batch_size,) + self.disc_patch)
-        match = np.zeros((batch_size,) + (1,1,1))
-        match_fake = np.zeros((batch_size,) + (1,1,1))
+        match = np.zeros((batch_size,) + (3,3,1))
+        match_fake = np.zeros((batch_size,) + (3,3,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
 
         for epoch in range(epochs):
