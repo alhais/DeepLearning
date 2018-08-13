@@ -63,7 +63,7 @@ class Pix2Pix():
         img_B = Input(shape=self.img_shape)
 
         # By conditioning on B generate a fake version of A
-        fake_A, Z0 = self.generator([I,img_B])
+        [fake_A, Z0] = self.generator([I,img_B])
 
         # For the combined model we will only train the generator
         self.discriminator.trainable = False
@@ -187,9 +187,7 @@ class Pix2Pix():
         #Wrong dimension compared to the article (article:112X112X3 Here:224X224X3 )
 
 
-        fake_A_model = Model([input_img, input_EMG ], DecoderOut)
-        Z0_model = Model([input_EMG], EMG)
-        return fake_A_model, Z0_model
+        return Model([input_img, input_EMG ], [DecoderOut,EMG])
 
     def build_discriminator(self):
 
