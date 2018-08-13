@@ -271,7 +271,7 @@ class Pix2Pix():
         for x in range(imgs_A.shape[0]):
             imgs_I.append(imgs_A[0])
         imgs_I = np.array(imgs_I)
-        fake_A = self.generator.predict([imgs_I,imgs_B])
+        [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
 
         gen_imgs = np.concatenate([imgs_B, fake_A, imgs_A])
 
