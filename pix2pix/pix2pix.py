@@ -178,6 +178,7 @@ class Pix2Pix():
         # Adversarial loss ground truths
         valid = np.ones((batch_size,) + self.disc_patch)
         match = np.zeros((batch_size,) + (1,1,1))
+        match_fake = np.zeros((batch_size,) + (1,1,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
 
         for epoch in range(epochs):
@@ -197,7 +198,7 @@ class Pix2Pix():
 
                 # Train the discriminators (original images = real / generated = Fake)
                 d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
-                d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], fake)
+                d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, match_fake])
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
                 # -----------------
