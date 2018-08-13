@@ -106,8 +106,7 @@ class Pix2Pix():
         e2 = conv2d(e1, self.gf*2)
         h = Flatten()(e2)
         z0 = Dense(256)(h)
-        h = Dense(2048)(z0)
-        h = Reshape((2,2,512))(h)
+
         
         # Image input
         d0 = Input(shape=self.img_shape)
@@ -121,7 +120,11 @@ class Pix2Pix():
         d6 = conv2d(d5, self.gf*8)
         d7 = conv2d(d6, self.gf*8)
 
-        d8 = Concatenate()([d7, h])
+        h = Flatten()(d7)
+        h = Dense(256)(h)
+        h = Concatenate()([h, z0])
+        h = Reshape((1,1,512))(h)
+        d8 = UpSampling2D(size=2)(h)
 
 
         h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
