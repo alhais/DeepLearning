@@ -73,7 +73,7 @@ class Pix2Pix():
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, I0, Z0])
         self.combined.compile(loss=['mse', 'mae', 'mae'],
-                              loss_weights=[1, 100],
+                              loss_weights=[1, 100, 100],
                               optimizer=optimizer)
 
     def build_generator(self):
