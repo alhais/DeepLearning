@@ -116,7 +116,7 @@ class Pix2Pix():
         #@title EEG Encoder
         input_EMG = Input(shape=self.img_shape)
         h = Conv2D(filters=64, kernel_size=(3),\
-        #strides=(1,1), padding='SAME')(input_EMG)
+        strides=(1,1), padding='SAME')(input_EMG)
         #h = BatchNormalization()(h)
         #h = LeakyReLU(alpha=0.2)(h)
         #h = Conv2D(filters=128, kernel_size=(3),\
