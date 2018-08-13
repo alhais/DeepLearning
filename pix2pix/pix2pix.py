@@ -114,11 +114,32 @@ class Pix2Pix():
 
         #@title EEG Encoder
         input_EMG = Input(shape=self.img_shape)
-        h = Conv2D(filters=64, kernel_size=(5),\
-        strides=(2,2), padding='SAME')(input_EMG)
+        h = Conv2D(filters=64, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(input_EMG)
         h = BatchNormalization()(h)
         h = LeakyReLU(alpha=0.2)(h)
+        h = Conv2D(filters=128, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(input_EMG)
+        h = BatchNormalization()(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = MaxPooling2D(pool_size = (2, 2),strides=(1,2))(h)
+        h = Conv2D(filters=256, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(input_EMG)
+        h = BatchNormalization()(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = Conv2D(filters=256, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(input_EMG)
+        h = BatchNormalization()(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = Conv2D(filters=512, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(input_EMG)
+        h = BatchNormalization()(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = MaxPooling2D(pool_size = (2, 2),strides=(2,2))(h)
         h = Flatten()(h)
+        h = Dense(512)(h)
+        h = BatchNormalization()(h)
+        h = LeakyReLU(alpha=0.2)(h)
         EMG = Dense(256)(h)
 
 
