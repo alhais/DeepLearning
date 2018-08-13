@@ -21,9 +21,13 @@ class DataLoader():
     
         batch_images_A = []
         batch_images_B = []
+        #for x in range(batch_size):
+            #batch_images_A.append(pathA[rd_array[x]])
+            #batch_images_B.append(pathB[rd_array[x]])
         for x in range(batch_size):
-            batch_images_A.append(pathA[rd_array[x]])
-            batch_images_B.append(pathB[rd_array[x]])
+            batch_images_A.append(pathA[x])
+            batch_images_B.append(pathB[x])
+
 
 
         imgs_A = []
