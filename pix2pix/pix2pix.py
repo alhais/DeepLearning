@@ -58,6 +58,7 @@ class Pix2Pix():
 
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
+        Z = Input(shape=(256,))
         img_A = Input(shape=self.img_shape)
         img_B = Input(shape=self.img_shape)
 
