@@ -99,18 +99,20 @@ class Pix2Pix():
             return u
 
         # Image input
+        # Image input
         input_EMG = Input(shape=self.img_shape)
-        e1 = conv2d(input_EMG, self.gf, bn=False)
-        e2 = conv2d(e1, self.gf*2)
+        e1 = conv2d(input_EMG, gf, bn=False)
+        e2 = conv2d(e1, gf*2)
         h = Flatten()(e2)
         z0 = Dense(256)(h)
+        h = Dense(2048)(z0)
+        h = Reshape((2,2,512))(h)
         
         # Image input
-        input_img = Input(shape=self.img_shape)
-        input_concat = add([input_img, input_EMG])
+        d0 = Input(shape=self.img_shape)
 
         # Downsampling
-        d1 = conv2d(input_concat, self.gf, bn=False)
+        d1 = conv2d(d0, self.gf, bn=False)
         d2 = conv2d(d1, self.gf*2)
         d3 = conv2d(d2, self.gf*4)
         d4 = conv2d(d3, self.gf*8)
@@ -118,8 +120,9 @@ class Pix2Pix():
         d6 = conv2d(d5, self.gf*8)
         d7 = conv2d(d6, self.gf*8)
 
+        d8 = Concatenate()([d7, h])
         # Upsampling
-        u1 = deconv2d(d7, d6, self.gf*8)
+        u1 = deconv2d(d8, d6, self.gf*8)
         u2 = deconv2d(u1, d5, self.gf*8)
         u3 = deconv2d(u2, d4, self.gf*8)
         u4 = deconv2d(u3, d3, self.gf*4)
@@ -131,7 +134,7 @@ class Pix2Pix():
 
 
 
-        return Model([input_img, input_EMG ], [output_img,z0])
+        return Model([d0,input_EMG], [output_img,z0])
 
     def build_discriminator(self):
 
