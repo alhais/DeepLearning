@@ -241,7 +241,7 @@ class Pix2Pix():
         for i in range(r):
             for j in range(c):
                 axs[i,j].imshow(gen_imgs[cnt])
-                axs[i, j].set_title(titles[i])
+                axs[i, j].set_title(titles[i],fontsize=8)
                 axs[i,j].axis('off')
                 cnt += 1
         fig.savefig("images/%s/%d_%d.png" % (self.dataset_name, epoch, batch_i))
