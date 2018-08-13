@@ -69,7 +69,7 @@ class Pix2Pix():
         self.discriminator.trainable = False
 
         # Discriminators determines validity of translated images / condition pairs
-        valid = self.discriminator([fake_A, img_B])
+        valid = self.discriminator([fake_A, Z])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, fake_A])
         self.combined.compile(loss=['mse', 'mae'],
@@ -201,7 +201,11 @@ class Pix2Pix():
             return d
 
         img_A = Input(shape=self.img_shape)
-        img_B = Input(shape=self.img_shape)
+        Z = Input(shape=(256,))
+
+        h = Dense(196608)(Z)
+        h = Reshape((256,256,3))(h)
+        combined_imgs = Concatenate(axis=-1)([img_A, h])
 
         # Concatenate image and conditioning image by channels to produce input
         combined_imgs = Concatenate(axis=-1)([img_A, img_B])
@@ -213,7 +217,7 @@ class Pix2Pix():
 
         validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
 
-        return Model([img_A, img_B], validity)
+        return Model([img_A, Z], validity)
 
     def train(self, epochs, batch_size=1, sample_interval=50):
 
