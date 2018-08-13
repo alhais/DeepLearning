@@ -66,8 +66,8 @@ class Pix2Pix():
         [I0, Z0] = self.generator([I,img_B])
 
         # For the combined model we will only train the generator
-        #self.discriminator.trainable = False
-        self.discriminator.trainable = True
+        self.discriminator.trainable = False
+
 
         # Discriminators determines validity of translated images / condition pairs
         [valid, match] = self.discriminator([I0, Z0])
