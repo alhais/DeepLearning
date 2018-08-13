@@ -101,8 +101,8 @@ class Pix2Pix():
         # Image input
         # Image input
         input_EMG = Input(shape=self.img_shape)
-        e1 = conv2d(input_EMG, gf, bn=False)
-        e2 = conv2d(e1, gf*2)
+        e1 = conv2d(input_EMG, self.gf, bn=False)
+        e2 = conv2d(e1, self.gf*2)
         h = Flatten()(e2)
         z0 = Dense(256)(h)
         h = Dense(2048)(z0)
