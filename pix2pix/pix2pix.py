@@ -122,18 +122,29 @@ class Pix2Pix():
         d7 = conv2d(d6, self.gf*8)
 
         d8 = Concatenate()([d7, h])
-        # Upsampling
-        u1 = deconv2d(d8, d6, self.gf*8)
-        u2 = deconv2d(u1, d5, self.gf*8)
-        u3 = deconv2d(u2, d4, self.gf*8)
-        u4 = deconv2d(u3, d3, self.gf*4)
-        u5 = deconv2d(u4, d2, self.gf*2)
-        u6 = deconv2d(u5, d1, self.gf)
 
-        u7 = UpSampling2D(size=2)(u6)
+
+        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='relu')(d8)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='relu')(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='relu')(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='relu')(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='relu')(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='relu')(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        u7 = UpSampling2D(size=2)(h)
+
         output_img = Conv2D(self.channels, kernel_size=4, strides=1, padding='same', activation='tanh')(u7)
-
-
 
         return Model([d0,input_EMG], [output_img,z0])
 
