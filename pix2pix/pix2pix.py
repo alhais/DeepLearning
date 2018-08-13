@@ -58,18 +58,18 @@ class Pix2Pix():
 
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
-        Z = Input(shape=(256,))
+        #Z = Input(shape=(256,))
         img_A = Input(shape=self.img_shape)
         img_B = Input(shape=self.img_shape)
 
         # By conditioning on B generate a fake version of A
-        fake_A = self.generator([I,img_B])
+        fake_A, Z0 = self.generator([I,img_B])
 
         # For the combined model we will only train the generator
         self.discriminator.trainable = False
 
         # Discriminators determines validity of translated images / condition pairs
-        valid = self.discriminator([fake_A, Z])
+        valid = self.discriminator([fake_A, Z0])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, fake_A])
         self.combined.compile(loss=['mse', 'mae'],
@@ -188,7 +188,7 @@ class Pix2Pix():
 
 
 
-        return Model([input_img, input_EMG ], DecoderOut)
+        return Model([input_img, input_EMG ], DecoderOut), Model([input_EMG], EMG)
 
     def build_discriminator(self):
 
