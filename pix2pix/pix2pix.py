@@ -124,22 +124,22 @@ class Pix2Pix():
         d8 = Concatenate()([d7, h])
 
 
-        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(d8)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
         u7 = UpSampling2D(size=2)(h)
