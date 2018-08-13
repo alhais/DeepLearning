@@ -235,9 +235,9 @@ class Pix2Pix():
 
     def sample_images(self, epoch, batch_i):
         os.makedirs('images/%s' % self.dataset_name, exist_ok=True)
-        r, c = 3, 10
+        r, c = 3, 30
 
-        imgs_A, imgs_B = self.data_loader.load_data(batch_size=10, is_testing=True)
+        imgs_A, imgs_B = self.data_loader.load_data(batch_size=30, is_testing=True)
         imgs_I = []
         for x in range(imgs_A.shape[0]):
             imgs_I.append(imgs_A[0])
@@ -255,7 +255,7 @@ class Pix2Pix():
         for i in range(r):
             for j in range(c):
                 axs[i,j].imshow(gen_imgs[cnt])
-                axs[i, j].set_title(titles[i],fontsize=5)
+                axs[i, j].set_title(titles[i],fontsize=3)
                 axs[i,j].axis('off')
                 cnt += 1
         fig.savefig("images/%s/%d_%d.png" % (self.dataset_name, epoch, batch_i))
