@@ -133,13 +133,13 @@ class Pix2Pix():
         h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*4, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf*2, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
+        h = Conv2DTranspose(filters=self.gf, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
         u7 = UpSampling2D(size=2)(h)
