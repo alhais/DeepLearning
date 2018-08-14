@@ -21,8 +21,8 @@ import os
 class Pix2Pix():
     def __init__(self):
         # Input shape
-        self.img_rows = 256
-        self.img_cols = 256
+        self.img_rows = 32
+        self.img_cols = 32
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
 
