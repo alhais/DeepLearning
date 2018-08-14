@@ -79,91 +79,95 @@ class Pix2Pix():
 
     def build_generator(self):
         """U-Net Generator"""
-        """U-Net Generator"""
 
-        def conv2d(layer_input, filters, f_size=4, bn=True):
-            """Layers used during downsampling"""
-            d = Conv2D(filters, kernel_size=f_size, strides=2, padding='same')(layer_input)
-            d = LeakyReLU(alpha=0.2)(d)
-            if bn:
-                d = BatchNormalization(momentum=0.8)(d)
-            return d
-
-        def deconv2d(layer_input, skip_input, filters, f_size=4, dropout_rate=0):
-            """Layers used during upsampling"""
-            u = UpSampling2D(size=2)(layer_input)
-            u = Conv2D(filters, kernel_size=f_size, strides=1, padding='same', activation='relu')(u)
-            if dropout_rate:
-                u = Dropout(dropout_rate)(u)
-            u = BatchNormalization(momentum=0.8)(u)
-            u = Concatenate()([u, skip_input])
-            return u
-
-        # Image input
-        # Image input
+        #EMG Decoder
         input_EMG = Input(shape=self.img_shape)
-        # Downsampling
-        h = conv2d(input_EMG, self.gf, bn=False)
-        h = conv2d(h, self.gf*2)
-        h = MaxPooling2D((2, 2), strides=(1, 2), padding='same')(h)
-        h = conv2d(h, self.gf*4)
-        h = conv2d(h, self.gf*8)
-        h = conv2d(h, self.gf*8)
-        h = MaxPooling2D((2, 2), strides=(2, 2), padding='same')(h)
+        h = Conv2D(filters=self.gf, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(input_EMG)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=self.gf*2, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = MaxPooling2D(strides=(1, 2), padding='same')(h)
+        h = Conv2D(filters=self.gf*4, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=self.gf*4, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=self.gf*8, kernel_size=(3),\
+        strides=(1,1), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = MaxPooling2D(strides=(2, 2), padding='same')(h)
         h = Flatten()(h)
         h = Dense(512)(h)
         h = LeakyReLU(alpha=0.2)(h)
         h = BatchNormalization(momentum=0.8)(h)
         z0 = Dense(256)(h)
 
-        
+
         # Image input
-        d0 = Input(shape=self.img_shape)
-
-        # Downsampling
-        d1 = conv2d(d0, self.gf, bn=False)
-        d2 = conv2d(d1, self.gf*2)
-        d3 = conv2d(d2, self.gf*4)
-        d4 = conv2d(d3, self.gf*8)
-        d5 = conv2d(d4, self.gf*8)
-        d6 = conv2d(d5, self.gf*8)
-        d7 = conv2d(d6, self.gf*8)
-
-        h = Flatten()(d7)
+        input_I = Input(shape=self.img_shape)
+        h = Conv2D(filters=self.gf, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(input_I)
+        h = LeakyReLU(alpha=0.2)(h)
+        d0 = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=self.gf*2, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(d0)
+        h = LeakyReLU(alpha=0.2)(h)
+        d1 = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=self.gf*4, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(d1)
+        h = LeakyReLU(alpha=0.2)(h)
+        d2 = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=self.gf*8, kernel_size=(5),\
+        strides=(2,2), padding='SAME')(d2)
+        h = LeakyReLU(alpha=0.2)(h)
+        d3 = BatchNormalization(momentum=0.8)(h)
+        print(h.shape)
+        h = Flatten()(d3)
         h = Dense(512)(h)
         h = LeakyReLU(alpha=0.2)(h)
-        h = BatchNormalization(momentum=0.8)(h)
+        d4 = BatchNormalization(momentum=0.8)(h)
         h = Dense(256)(h)
+
+
+
         h = Concatenate()([h, z0])
         h = Reshape((1, 512))(h)
         h = GRU(512, recurrent_initializer="orthogonal")(h)
-        h = Reshape((1,1,512))(h)
-        d8 = UpSampling2D(size=2)(h)
+        h = Dense(131072)(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+
+        h = Reshape((16,16,512))(h)
 
 
-        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
-        strides=(2,2), padding='SAME', activation='relu')(d8)
-        h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
-        strides=(2,2), padding='SAME', activation='relu')(h)
-        h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2DTranspose(filters=self.gf*8, kernel_size=(5),\
-        strides=(2,2), padding='SAME', activation='relu')(h)
-        h = BatchNormalization(momentum=0.8)(h)
         h = Conv2DTranspose(filters=self.gf*4, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
+        h = Concatenate()([h, d2])
         h = Conv2DTranspose(filters=self.gf*2, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
+        h = Concatenate()([h, d1])
         h = Conv2DTranspose(filters=self.gf, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
-        u7 = UpSampling2D(size=2)(h)
+        h = Concatenate()([h, d0])
+        h = Conv2DTranspose(filters=32, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='relu')(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=3, kernel_size=(5),\
+        strides=(2,2), padding='SAME', activation='tanh')(h)
+        output_img = UpSampling2D(size=2)(h)
 
-        output_img = Conv2D(self.channels, kernel_size=4, strides=1, padding='same', activation='tanh')(u7)
-
-        return Model([d0,input_EMG], [output_img,z0])
+        return Model([input_EMG,input_I], [output_img,z0])
 
     def build_discriminator(self):
 
