@@ -73,8 +73,8 @@ class Pix2Pix():
         valid = self.discriminator([I0, img_B])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, I0, Z0])
-        self.combined.compile(loss=['mse', 'mse','mae', 'mae'],
-                              loss_weights=[1, 1, 100, 100],
+        self.combined.compile(loss=['mse', 'mse','mae'],
+                              loss_weights=[1, 1, 100],
                               optimizer=optimizer)
 
     def build_generator(self):
