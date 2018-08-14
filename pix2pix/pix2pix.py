@@ -70,9 +70,9 @@ class Pix2Pix():
 
 
         # Discriminators determines validity of translated images / condition pairs
-        [valid, match] = self.discriminator([I0, img_B])
+        valid = self.discriminator([I0, img_B])
 
-        self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
+        self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, I0, Z0])
         self.combined.compile(loss=['mse', 'mse','mae', 'mae'],
                               loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
@@ -174,13 +174,7 @@ class Pix2Pix():
             if bn:
                 d = BatchNormalization(momentum=0.8)(d)
             return d
-        def conv2d(layer_input, filters, f_size=4, bn=True):
-            """Layers used during downsampling"""
-            d = Conv2D(filters, kernel_size=f_size, strides=2, padding='same')(layer_input)
-            d = LeakyReLU(alpha=0.2)(d)
-            if bn:
-                d = BatchNormalization(momentum=0.8)(d)
-            return d
+
 
         img_A = Input(shape=self.img_shape)
         img_B = Input(shape=self.img_shape)
@@ -194,32 +188,9 @@ class Pix2Pix():
 
         validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
 
-        # Downsampling
-        h = conv2d(img_B, self.gf, bn=False)
-        h = conv2d(h, self.gf*2)
-        h = MaxPooling2D((2, 2), strides=(1, 2), padding='same')(h)
-        h = conv2d(h, self.gf*4)
-        h = conv2d(h, self.gf*8)
-        h = conv2d(h, self.gf*8)
-        h = MaxPooling2D((2, 2), strides=(2, 2), padding='same')(h)
-        h = Flatten()(h)
-        h = Dense(512)(h)
-        h = LeakyReLU(alpha=0.2)(h)
-        h = BatchNormalization(momentum=0.8)(h)
-        z0 = Dense(256)(h)
-        h =Reshape((16, 16, 1))(z0)
-        h = Concatenate()([validity, h])
-        d = Conv2D(self.gf*8, kernel_size=4, strides=2, padding='same')(h)
-        d = LeakyReLU(alpha=0.2)(d)
-
-        d = Conv2D(self.gf*4, kernel_size=1, strides=1, padding='same')(d)
-        d = LeakyReLU(alpha=0.2)(d)
-        d = BatchNormalization(momentum=0.8)(d)
 
 
-        match = Conv2D(1, kernel_size=4, strides=2, padding='valid')(d)
-
-        return Model([img_A, img_B], [validity, match])
+        return Model([img_A, img_B], validity)
 
     def train(self, epochs, batch_size=1, sample_interval=50):
 
@@ -227,8 +198,6 @@ class Pix2Pix():
 
         # Adversarial loss ground truths
         valid = np.ones((batch_size,) + self.disc_patch)
-        match = np.zeros((batch_size,) + (3,3,1))
-        match_fake = np.zeros((batch_size,) + (3,3,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
 
         for epoch in range(epochs):
@@ -247,8 +216,8 @@ class Pix2Pix():
                 fake_A = self.generator.predict([imgs_I,imgs_B])
 
                 # Train the discriminators (original images = real / generated = Fake)
-                d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], [valid, match])
-                d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B], [fake, match_fake])
+                d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], valid)
+                d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B], fake )
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
                 # -----------------
