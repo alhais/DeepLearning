@@ -202,8 +202,7 @@ class Pix2Pix():
         strides=(1,1), padding='SAME')(h)
         h = LeakyReLU(alpha=0.2)(h)
         h = BatchNormalization(momentum=0.8)(h)
-        print(h.shape)
-
+  
         out2 = Conv2D(filters=1, kernel_size=(4),\
         strides=(2,2), padding='valid')(h)
 
