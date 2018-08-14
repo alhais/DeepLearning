@@ -105,8 +105,8 @@ class Pix2Pix():
         # Downsampling
         h = conv2d(input_EMG, self.gf, bn=False)
         h = conv2d(h, self.gf*2)
-        #h = MaxPooling2D((2, 2), strides=(1, 2), padding='same')(h)
-        #h = conv2d(h, self.gf*4)
+        h = MaxPooling2D((2, 2), strides=(1, 2), padding='same')(h)
+        h = conv2d(h, self.gf*4)
         #h = conv2d(h, self.gf*8)
         #h = conv2d(h, self.gf*8)
         h = MaxPooling2D((2, 2), strides=(2, 2), padding='same')(h)
