@@ -174,6 +174,13 @@ class Pix2Pix():
             if bn:
                 d = BatchNormalization(momentum=0.8)(d)
             return d
+        def conv2d(layer_input, filters, f_size=4, bn=True):
+            """Layers used during downsampling"""
+            d = Conv2D(filters, kernel_size=f_size, strides=2, padding='same')(layer_input)
+            d = LeakyReLU(alpha=0.2)(d)
+            if bn:
+                d = BatchNormalization(momentum=0.8)(d)
+            return d
 
         img_A = Input(shape=self.img_shape)
         img_B = Input(shape=self.img_shape)
