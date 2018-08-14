@@ -128,8 +128,9 @@ class Pix2Pix():
 
         h = Flatten()(d7)
         h = Dense(256)(h)
-        h = Concatenate()([z0, h])
-        h = Reshape((1, 512))(h)
+        #h = Concatenate()([z0, h])
+        h = add([z0, h])
+        h = Reshape((1, 256))(h)
         h = GRU(512, recurrent_initializer="orthogonal")(h)
         h = Reshape((1,1,512))(h)
         d8 = UpSampling2D(size=2)(h)
