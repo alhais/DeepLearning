@@ -70,7 +70,7 @@ class Pix2Pix():
 
 
         # Discriminators determines validity of translated images / condition pairs
-        [valid, match] = self.discriminator([I0, img_B, Z0])
+        [valid, match] = self.discriminator([I0, img_B])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
         self.combined.compile(loss=['mse', 'mse','mae', 'mae'],
@@ -187,8 +187,20 @@ class Pix2Pix():
 
         validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
 
-        Z = Input(shape=(256,))
-        h =Reshape((16, 16, 1))(Z)
+        # Downsampling
+        h = conv2d(img_B, self.gf, bn=False)
+        h = conv2d(h, self.gf*2)
+        h = MaxPooling2D((2, 2), strides=(1, 2), padding='same')(h)
+        h = conv2d(h, self.gf*4)
+        h = conv2d(h, self.gf*8)
+        h = conv2d(h, self.gf*8)
+        h = MaxPooling2D((2, 2), strides=(2, 2), padding='same')(h)
+        h = Flatten()(h)
+        h = Dense(512)(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        z0 = Dense(256)(h)
+        h =Reshape((16, 16, 1))(z0)
         h = Concatenate()([validity, h])
         d = Conv2D(self.gf*8, kernel_size=4, strides=2, padding='same')(h)
         d = LeakyReLU(alpha=0.2)(d)
@@ -200,7 +212,7 @@ class Pix2Pix():
 
         match = Conv2D(1, kernel_size=4, strides=2, padding='valid')(d)
 
-        return Model([img_A, img_B, Z], [validity, match])
+        return Model([img_A, img_B], [validity, match])
 
     def train(self, epochs, batch_size=1, sample_interval=50):
 
@@ -225,11 +237,11 @@ class Pix2Pix():
                 for x in range(imgs_A.shape[0]):
                     imgs_I.append(imgs_A[0])
                 imgs_I = np.array(imgs_I)
-                [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
+                fake_A = self.generator.predict([imgs_I,imgs_B])
 
                 # Train the discriminators (original images = real / generated = Fake)
-                d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B, Z0], [valid, match])
-                d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B, Z0], [fake, match_fake])
+                d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], [valid, match])
+                d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B], [fake, match_fake])
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
                 # -----------------
@@ -237,7 +249,7 @@ class Pix2Pix():
                 # -----------------
 
                 # Train the generators
-                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
+                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A])
 
                 elapsed_time = datetime.datetime.now() - start_time
                 # Plot the progress
@@ -260,7 +272,7 @@ class Pix2Pix():
         for x in range(imgs_A.shape[0]):
             imgs_I.append(imgs_A[0])
         imgs_I = np.array(imgs_I)
-        [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
+        fake_A = self.generator.predict([imgs_I,imgs_B])
         fake_A = fake_A*0.5
         gen_imgs = np.concatenate([imgs_B, fake_A, imgs_A])
         
