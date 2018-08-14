@@ -109,7 +109,7 @@ class Pix2Pix():
         h = conv2d(h, self.gf*4)
         h = conv2d(h, self.gf*8)
         h = conv2d(h, self.gf*8)
-        h = MaxPooling2D((2, 2), strides=(1, 2), padding='same')(h)
+        h = MaxPooling2D((2, 2), strides=(2, 2), padding='same')(h)
         h = Flatten()(h)
         h = Dense(512)(h)
         h = LeakyReLU(alpha=0.2)(h)
