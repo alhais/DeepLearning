@@ -138,11 +138,11 @@ class Pix2Pix():
         h = Concatenate()([h, z0])
         h = Reshape((1, 512))(h)
         h = GRU(512, recurrent_initializer="orthogonal")(h)
-        h = Dense(2048)(h)
+        h = Dense(25088)(h)
         h = LeakyReLU(alpha=0.2)(h)
         h = BatchNormalization(momentum=0.8)(h)
 
-        h = Reshape((2,2,512))(h)
+        h = Reshape((7,7,512))(h)
 
         h = Conv2DTranspose(filters=self.gf*4, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
