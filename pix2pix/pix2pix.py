@@ -70,7 +70,7 @@ class Pix2Pix():
 
 
         # Discriminators determines validity of translated images / condition pairs
-        [valid, match] = self.discriminator([I0, img_B])
+        [valid, match] = self.discriminator([I0, Z0])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
         self.combined.compile(loss=['mse', 'mse','mae','mae'],
