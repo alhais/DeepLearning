@@ -137,7 +137,7 @@ class Pix2Pix():
 
         h = Concatenate()([h, z0])
         h = Reshape((1, 512))(h)
-        h = GRU(512, recurrent_initializer="orthogonal")(h)
+        #h = GRU(512, recurrent_initializer="orthogonal")(h)
         h = Dense(131072)(h)
         h = LeakyReLU(alpha=0.2)(h)
         h = BatchNormalization(momentum=0.8)(h)
