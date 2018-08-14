@@ -108,9 +108,10 @@ class Pix2Pix():
         h = conv2d(h, self.gf*4)
         h = conv2d(h, self.gf*8)
         h = conv2d(h, self.gf*8)
-        h = conv2d(h, self.gf*8)
-        h = conv2d(h, self.gf*8)
         h = Flatten()(h)
+        h = Dense(512)(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
         z0 = Dense(256)(h)
 
         
@@ -128,9 +129,8 @@ class Pix2Pix():
 
         h = Flatten()(d7)
         h = Dense(256)(h)
-        #h = Concatenate()([z0, h])
-        h = add([z0, h])
-        h = Reshape((1, 256))(h)
+        h = Concatenate()([h, z0])
+        h = Reshape((1, 512))(h)
         h = GRU(512, recurrent_initializer="orthogonal")(h)
         h = Reshape((1,1,512))(h)
         d8 = UpSampling2D(size=2)(h)
