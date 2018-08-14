@@ -129,14 +129,11 @@ class Pix2Pix():
         strides=(2,2), padding='SAME')(d2)
         h = LeakyReLU(alpha=0.2)(h)
         d3 = BatchNormalization(momentum=0.8)(h)
-        print(h.shape)
         h = Flatten()(d3)
         h = Dense(512)(h)
         h = LeakyReLU(alpha=0.2)(h)
         d4 = BatchNormalization(momentum=0.8)(h)
         h = Dense(256)(h)
-
-
 
         h = Concatenate()([h, z0])
         h = Reshape((1, 512))(h)
@@ -146,7 +143,6 @@ class Pix2Pix():
         h = BatchNormalization(momentum=0.8)(h)
 
         h = Reshape((16,16,512))(h)
-
 
         h = Conv2DTranspose(filters=self.gf*4, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
