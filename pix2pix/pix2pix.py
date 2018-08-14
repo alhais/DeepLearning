@@ -166,31 +166,48 @@ class Pix2Pix():
         return Model([input_EMG,input_I], [output_img,z0])
 
     def build_discriminator(self):
+    
+        Z0 = Input(shape=(256,))
+        # Image input
+        I0 = Input(shape=self.img_shape)
+        
+        h = Conv2D(filters=16, kernel_size=(4),\
+        strides=(2,2), padding='SAME')(I0)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=32, kernel_size=(4),\
+        strides=(2,2), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=64, kernel_size=(4),\
+        strides=(2,2), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=128, kernel_size=(4),\
+        strides=(2,2), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        out1 = Conv2D(filters=1, kernel_size=(4),\
+        strides=(1,1), padding='SAME')(h)
+        h = Conv2D(filters=256, kernel_size=(4),\
+        strides=(2,2), padding='SAME')(out1)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
 
-        def d_layer(layer_input, filters, f_size=4, bn=True):
-            """Discriminator layer"""
-            d = Conv2D(filters, kernel_size=f_size, strides=2, padding='same')(layer_input)
-            d = LeakyReLU(alpha=0.2)(d)
-            if bn:
-                d = BatchNormalization(momentum=0.8)(d)
-            return d
+        d0 = Reshape((1, 1, 256))(Z0)
+        d0 = UpSampling2D(size=4)(d0)
 
+        h = Concatenate()([h, d0])
+        h = Conv2D(filters=128, kernel_size=(1),\
+        strides=(1,1), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
+        print(h.shape)
 
-        img_A = Input(shape=self.img_shape)
-        img_B = Input(shape=self.img_shape)
+        out2 = Conv2D(filters=1, kernel_size=(4),\
+        strides=(2,2), padding='valid')(h)
 
-        # Concatenate image and conditioning image by channels to produce input
-        combined_imgs = Concatenate(axis=-1)([img_A, img_B])
-        d1 = d_layer(combined_imgs, self.gf, bn=False)
-        d2 = d_layer(d1, self.gf*2)
-        d3 = d_layer(d2, self.gf*4)
-        d4 = d_layer(d3, self.gf*8)
-
-        validity = Conv2D(1, kernel_size=4, strides=1, padding='same')(d4)
-
-
-
-        return Model([img_A, img_B], validity)
+        return Model([I0,Z0],[out1,out2])
 
     def train(self, epochs, batch_size=1, sample_interval=50):
 
