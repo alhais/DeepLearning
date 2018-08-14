@@ -99,16 +99,8 @@ for i in range(0,numOfChunks*step,step):
 #print(mcc_length,n_frames)
 b = np.zeros([mfcc_data.shape[0],winSize,3],dtype=np.uint8)
 count = 0
+
 for x in range(1,int(n_frames/10)):
-  success,image = vidcap.read()
-  if success:
-    #b[:,:,0] = chuncks[:,:,x]
-    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/train/B/' + "%d_emg.jpg" % count, chuncks[:,:,x])
-    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/train/A/' + "%d.jpg" % count, image)
-    #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
-    count += 1
-count = 0
-for x in range(int(n_frames/10),n_frames):
   success,image = vidcap.read()
   if success:
     #b[:,:,0] = chuncks[:,:,x]
@@ -116,6 +108,16 @@ for x in range(int(n_frames/10),n_frames):
     cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/test/A/' + "%d.jpg" % count, image)
     #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
     count += 1
+count = 0
+for x in range(int(n_frames/10),n_frames):
+  success,image = vidcap.read()
+  if success:
+    #b[:,:,0] = chuncks[:,:,x]
+    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/train/B/' + "%d_emg.jpg" % count, chuncks[:,:,x])
+    cv2.imwrite(os.getcwd() + '/DeepLearning/pix2pix/datasets/facades/train/A/' + "%d.jpg" % count, image)
+    #print(os.getcwd() + '/DeepLearning/datasets/train/' + "%d.jpg created"% count)
+    count += 1
+
     
 #from google.colab import files
 #import os
