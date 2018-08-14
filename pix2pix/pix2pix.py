@@ -225,7 +225,7 @@ class Pix2Pix():
                 # -----------------
 
                 # Train the generators
-                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A])
+                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, imgs_A])
 
                 elapsed_time = datetime.datetime.now() - start_time
                 # Plot the progress
