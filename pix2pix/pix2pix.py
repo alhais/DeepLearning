@@ -235,8 +235,8 @@ class Pix2Pix():
                 [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
 
                 # Train the discriminators (original images = real / generated = Fake)
-                d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], [valid, match])
-                d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B], [fake, fake_match])
+                d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
+                d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, fake_match])
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
                 # -----------------
