@@ -179,14 +179,14 @@ class Pix2Pix():
         strides=(2,2), padding='SAME')(h)
         h = LeakyReLU(alpha=0.2)(h)
         h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2D(filters=64, kernel_size=(4),\
-        strides=(2,2), padding='SAME')(h)
-        h = LeakyReLU(alpha=0.2)(h)
-        h = BatchNormalization(momentum=0.8)(h)
-        h = Conv2D(filters=128, kernel_size=(4),\
-        strides=(2,2), padding='SAME')(h)
-        h = LeakyReLU(alpha=0.2)(h)
-        h = BatchNormalization(momentum=0.8)(h)
+        #h = Conv2D(filters=64, kernel_size=(4),\
+        #strides=(2,2), padding='SAME')(h)
+        #h = LeakyReLU(alpha=0.2)(h)
+        #h = BatchNormalization(momentum=0.8)(h)
+        #h = Conv2D(filters=128, kernel_size=(4),\
+        #strides=(2,2), padding='SAME')(h)
+        #h = LeakyReLU(alpha=0.2)(h)
+        #h = BatchNormalization(momentum=0.8)(h)
         out1 = Conv2D(filters=1, kernel_size=(4),\
         strides=(1,1), padding='SAME')(h)
         h = Conv2D(filters=256, kernel_size=(4),\
