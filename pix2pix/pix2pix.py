@@ -102,9 +102,15 @@ class Pix2Pix():
         # Image input
         # Image input
         input_EMG = Input(shape=self.img_shape)
-        e1 = conv2d(input_EMG, self.gf, bn=False)
-        e2 = conv2d(e1, self.gf*2)
-        h = Flatten()(e2)
+        # Downsampling
+        h = conv2d(input_EMG, self.gf, bn=False)
+        h = conv2d(h, self.gf*2)
+        h = conv2d(h, self.gf*4)
+        h = conv2d(h, self.gf*8)
+        h = conv2d(h, self.gf*8)
+        h = conv2d(h, self.gf*8)
+        h = conv2d(h, self.gf*8)
+        h = Flatten()(h)
         z0 = Dense(256)(h)
 
         
@@ -122,7 +128,7 @@ class Pix2Pix():
 
         h = Flatten()(d7)
         h = Dense(256)(h)
-        h = Concatenate()([h, z0])
+        h = Concatenate()([z0, h])
         h = Reshape((1, 512))(h)
         h = GRU(512, recurrent_initializer="orthogonal")(h)
         h = Reshape((1,1,512))(h)
