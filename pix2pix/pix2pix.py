@@ -21,8 +21,8 @@ import os
 class Pix2Pix():
     def __init__(self):
         # Input shape
-        self.img_rows = 32
-        self.img_cols = 32
+        self.img_rows = 112
+        self.img_cols = 112
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
 
@@ -70,11 +70,11 @@ class Pix2Pix():
 
 
         # Discriminators determines validity of translated images / condition pairs
-        valid = self.discriminator([I0, img_B])
+        [valid, match] = self.discriminator([I0, img_B])
 
-        self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, I0, Z0])
-        self.combined.compile(loss=['mse', 'mse','mae'],
-                              loss_weights=[1, 1, 100],
+        self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
+        self.combined.compile(loss=['mse', 'mse','mae','mae'],
+                              loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
 
     def build_generator(self):
@@ -215,7 +215,10 @@ class Pix2Pix():
 
         # Adversarial loss ground truths
         valid = np.ones((batch_size,) + self.disc_patch)
+        match = np.ones((batch_size,) + (1,1,1)
+        fake_match = np.ones((batch_size,) + (1,1,1)
         fake = np.zeros((batch_size,) + self.disc_patch)
+        
 
         for epoch in range(epochs):
             for batch_i, (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size)):
@@ -233,8 +236,8 @@ class Pix2Pix():
                 [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
 
                 # Train the discriminators (original images = real / generated = Fake)
-                d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], valid)
-                d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B], fake )
+                d_loss_real = self.discriminator.train_on_batch([imgs_A, imgs_B], [valid, match])
+                d_loss_fake = self.discriminator.train_on_batch([fake_A, imgs_B], [fake, fake_match])
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
                 # -----------------
@@ -242,7 +245,7 @@ class Pix2Pix():
                 # -----------------
 
                 # Train the generators
-                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, imgs_A, Z0])
+                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
 
                 elapsed_time = datetime.datetime.now() - start_time
                 # Plot the progress
