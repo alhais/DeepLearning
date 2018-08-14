@@ -130,6 +130,9 @@ class Pix2Pix():
         d7 = conv2d(d6, self.gf*8)
 
         h = Flatten()(d7)
+        h = Dense(512)(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
         h = Dense(256)(h)
         h = Concatenate()([h, z0])
         h = Reshape((1, 512))(h)
