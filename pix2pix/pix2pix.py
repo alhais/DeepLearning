@@ -21,8 +21,8 @@ import os
 class Pix2Pix():
     def __init__(self):
         # Input shape
-        self.img_rows = 112
-        self.img_cols = 112
+        self.img_rows = 32
+        self.img_cols = 32
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
 
@@ -37,8 +37,8 @@ class Pix2Pix():
         self.disc_patch = (patch, patch, 1)
 
         # Number of filters in the first layer of G and D
-        self.gf = 64
-        self.df = 64
+        self.gf = 16
+        self.df = 16
 
         optimizer = Adam(0.0002, 0.5)
 
@@ -138,11 +138,11 @@ class Pix2Pix():
         h = Concatenate()([h, z0])
         h = Reshape((1, 512))(h)
         h = GRU(512, recurrent_initializer="orthogonal")(h)
-        h = Dense(25088)(h)
+        h = Dense(2048)(h)
         h = LeakyReLU(alpha=0.2)(h)
         h = BatchNormalization(momentum=0.8)(h)
 
-        h = Reshape((7,7,512))(h)
+        h = Reshape((2,2,512))(h)
 
         h = Conv2DTranspose(filters=self.gf*4, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
@@ -156,7 +156,7 @@ class Pix2Pix():
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
         h = Concatenate()([h, d0])
-        h = Conv2DTranspose(filters=32, kernel_size=(5),\
+        h = Conv2DTranspose(filters=8, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='relu')(h)
         h = BatchNormalization(momentum=0.8)(h)
         h = Conv2D(filters=3, kernel_size=(5),\
