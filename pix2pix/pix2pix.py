@@ -27,17 +27,13 @@ class Pix2Pix():
                 return K.log(1.0 - discriminator.predict(y_pred))
             return loss
 
-        return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
         # Input shape
         self.img_rows = 32
         self.img_cols = 32
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
     
-        # Input images and their conditioning images
-        I = Input(shape=self.img_shape)
-        img_A = Input(shape=self.img_shape)
-        img_B = Input(shape=self.img_shape)
+ 
         
         # Configure data loader
         self.dataset_name = 'facades'
@@ -71,7 +67,10 @@ class Pix2Pix():
 
         # Build the generator
         self.generator = self.build_generator()
-
+        # Input images and their conditioning images
+        I = Input(shape=self.img_shape)
+        img_A = Input(shape=self.img_shape)
+        img_B = Input(shape=self.img_shape)
 
         # By conditioning on B generate a fake version of A
         [I0, Z0] = self.generator([I, img_B])
