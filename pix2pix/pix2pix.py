@@ -84,7 +84,7 @@ class Pix2Pix():
         [valid, match] = self.discriminator([I0, Z0])
 
         
-        g_loss = tf.reduce_mean(tf.losses.mean_squared_error((I0, Z0))  
+        g_loss = tf.reduce_mean(tf.losses.mean_squared_error(I0, Z0))  
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
