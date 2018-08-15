@@ -26,6 +26,10 @@ class Pix2Pix():
         def D_loss(y_true, y_pred):
             print(y_true.shape)
             return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
+        
+        def G_loss(y_true, y_pred):
+            print(y_true.shape)
+            return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
                          
         # Input shape
         self.img_rows = 32
@@ -83,7 +87,7 @@ class Pix2Pix():
         [valid, match] = self.discriminator([I0, Z0])
 
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
-        self.combined.compile(loss=['mse', 'mse','mae','mae'],
+        self.combined.compile(loss=['mse', 'mse','mae', G_loss],
                               loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
 
