@@ -17,17 +17,17 @@ import sys
 from data_loader import DataLoader
 import numpy as np
 import os
-import math
+import keras.backend as K
 
 class Pix2Pix():
     def __init__(self):
                   
-        def custom_objective(y_true, y_pred):
-            '''Just another crossentropy'''
-            y_pred = T.clip(y_pred, epsilon, 1.0 - epsilon)
-            y_pred /= y_pred.sum(axis=-1, keepdims=True)
-            cce = T.nnet.categorical_crossentropy(y_pred, y_true)
-            return cce
+        def create_adv_loss(discriminator):
+            def loss(y_true, y_pred):
+                return K.log(1.0 - discriminator.predict(y_pred))
+        return loss
+
+        return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
         # Input shape
         self.img_rows = 32
         self.img_cols = 32
@@ -59,8 +59,8 @@ class Pix2Pix():
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        #adv_loss = math.log(1.0 - self.discriminator.predict([img_A,img_B]))
-        self.discriminator.compile(loss=custom_objective,
+        adv_loss = create_adv_loss(self.discriminator)
+        self.discriminator.compile(loss=adv_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
 
