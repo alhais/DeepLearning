@@ -1,6 +1,6 @@
 from __future__ import print_function, division
 import scipy
-
+import tensorflow as tf
 from keras.datasets import mnist
 from keras_contrib.layers.normalization import InstanceNormalization
 from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Concatenate, Conv2DTranspose, concatenate, add, MaxPooling2D
@@ -32,7 +32,7 @@ class Pix2Pix():
         
         def G0_loss(y_true, y_pred):
             result = []
-            for i in range(len(y_pred)):
+            for i in range(tf.shape(y_pred)):
                 y_pred[i] = [max(min(x, 1 - K.epsilon()), K.epsilon()) for x in y_pred[i]]
                 result.append(-np.mean([y_true[i][j] * math.log(y_pred[i][j]) + (1 - y_true[i][j]) * math.log(1 - y_pred[i][j]) for j in range(len(y_pred[i]))]))
             return np.mean(result)
