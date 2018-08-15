@@ -198,10 +198,10 @@ class Pix2Pix():
         #d0 = UpSampling2D(size=4)(d0)
 
         h = Concatenate()([h, d0])
-        #h = Conv2D(filters=128, kernel_size=(1),\
-        #strides=(1,1), padding='SAME')(h)
-        #h = LeakyReLU(alpha=0.2)(h)
-        #h = BatchNormalization(momentum=0.8)(h)
+        h = Conv2D(filters=1, kernel_size=(1),\
+        strides=(1,1), padding='SAME')(h)
+        h = LeakyReLU(alpha=0.2)(h)
+        h = BatchNormalization(momentum=0.8)(h)
   
         out2 = Conv2D(filters=1, kernel_size=(1),\
         strides=(2,2), padding='valid')(h)
