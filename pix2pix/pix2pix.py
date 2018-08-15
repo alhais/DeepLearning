@@ -32,7 +32,7 @@ class Pix2Pix():
         
         def G0_loss(y_true, y_pred):
             print(y_true.shape)
-            return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
+            return K.log(1.0 - y_pred) + K.log(1.0 - y_true)
         def G1_loss(y_true, y_pred):
             print(y_true.shape)
             return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
