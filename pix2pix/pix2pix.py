@@ -22,11 +22,12 @@ import keras.backend as K
 class Pix2Pix():
     def __init__(self):
                   
-        def create_adv_loss(discriminator):
+        def D_loss(discriminator):
             def loss(y_true, y_pred):
-                
-                return K.log(1.0 - y_pred(0,:) + K.log(1.0 - y_true)
+                print(K.int_shape(y_true))
+                return K.log(1.0 - y_pred + K.log(1.0 - y_true)
             return loss
+ 
 
         # Input shape
         self.img_rows = 32
@@ -56,7 +57,7 @@ class Pix2Pix():
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        adv_loss = create_adv_loss(self.discriminator)
+        adv_loss = D_loss(self.discriminator)
         self.discriminator.compile(loss=adv_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
