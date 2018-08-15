@@ -84,8 +84,10 @@ class Pix2Pix():
         [valid, match] = self.discriminator([I0, Z0])
 
         
-        combine_model = Add()([I0, Z0])                 
-            
+        final_model = Sequential()
+        final_model.add(I)
+        final_model.add(I0)   
+        final_model.summary()    
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
         self.combined.compile(loss=[custom_loss, custom_loss,custom_loss,custom_loss],
