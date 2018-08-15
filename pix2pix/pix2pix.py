@@ -20,18 +20,18 @@ import os
 
 class Pix2Pix():
     def __init__(self):
-                
-        def create_adv_loss(discriminator):
-            def loss(y_true, y_pred):
-                return K.log(1.0 - discriminator.predict(y_pred))
-        return loss
-    
+                  
         # Input shape
         self.img_rows = 32
         self.img_cols = 32
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
-
+    
+        # Input images and their conditioning images
+        I = Input(shape=self.img_shape)
+        img_A = Input(shape=self.img_shape)
+        img_B = Input(shape=self.img_shape)
+        
         # Configure data loader
         self.dataset_name = 'facades'
         self.data_loader = DataLoader(dataset_name=self.dataset_name,
@@ -52,7 +52,7 @@ class Pix2Pix():
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        adv_loss = create_adv_loss(self.discriminator)
+        adv_loss = K.log(1.0 - self.discriminator.predict([img_A,img_B]))
         self.discriminator.compile(loss=adv_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
@@ -65,11 +65,6 @@ class Pix2Pix():
         # Build the generator
         self.generator = self.build_generator()
 
-        # Input images and their conditioning images
-        I = Input(shape=self.img_shape)
-        #Z = Input(shape=(256,))
-        img_A = Input(shape=self.img_shape)
-        img_B = Input(shape=self.img_shape)
 
         # By conditioning on B generate a fake version of A
         [I0, Z0] = self.generator([I, img_B])
