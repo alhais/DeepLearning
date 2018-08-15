@@ -94,7 +94,7 @@ class Pix2Pix():
         # Discriminators determines validity of translated images / condition pairs
         [valid, match] = self.discriminator([I0, Z0])
 
-        new_loss = G0_loss(I,I0)
+        new_loss = tf.reduce_mean(G0_loss(I,I0))
                            
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
         self.combined.compile(loss=[new_loss, D1_loss,G0_loss, G1_loss],
