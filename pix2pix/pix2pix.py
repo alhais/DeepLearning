@@ -23,12 +23,10 @@ class Pix2Pix():
     def __init__(self):
                   
        
-        def loss(y_true, y_pred):
+        def D_loss(y_true, y_pred):
             print(K.int_shape(y_true))
-            return K.log(1.0 - y_pred + K.log(1.0 - y_true)
-
- 
-
+            return K.log(1.0 - y_pred) + K.log(1.0 - y_true)
+                         
         # Input shape
         self.img_rows = 32
         self.img_cols = 32
