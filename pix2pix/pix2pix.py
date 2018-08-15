@@ -29,9 +29,11 @@ class Pix2Pix():
             return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
         
         def G0_loss(y_true, y_pred):
-            y_true = y_true [:,1]
-            print(y_true.shape)
-            return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
+            I = y_true [:,0]
+            I_pred =  y_pred [:,0]
+            Z =  y_true [:,1]
+            Z_pred =  y_pred [:,1]
+            return K.log(1.0 - I_pred) + K.log(1.0 - y_true)
 
         def G1_loss(y_true, y_pred):
             return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
@@ -76,6 +78,7 @@ class Pix2Pix():
 
         # Build the generator
         self.generator = self.build_generator()
+
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
         img_A = Input(shape=self.img_shape)
@@ -91,8 +94,10 @@ class Pix2Pix():
         # Discriminators determines validity of translated images / condition pairs
         [valid, match] = self.discriminator([I0, Z0])
 
+        new_loss = G0_loss(I,I0)
+                           
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
-        self.combined.compile(loss=[D0_loss, D1_loss,G0_loss, G1_loss],
+        self.combined.compile(loss=[new_loss, D1_loss,G0_loss, G1_loss],
                               loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
 
