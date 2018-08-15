@@ -22,6 +22,12 @@ import math
 class Pix2Pix():
     def __init__(self):
                   
+        def custom_objective(y_true, y_pred):
+            '''Just another crossentropy'''
+            y_pred = T.clip(y_pred, epsilon, 1.0 - epsilon)
+            y_pred /= y_pred.sum(axis=-1, keepdims=True)
+            cce = T.nnet.categorical_crossentropy(y_pred, y_true)
+            return cce
         # Input shape
         self.img_rows = 32
         self.img_cols = 32
@@ -53,8 +59,8 @@ class Pix2Pix():
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        adv_loss = math.log(1.0 - self.discriminator.predict([img_A,img_B]))
-        self.discriminator.compile(loss=adv_loss,
+        #adv_loss = math.log(1.0 - self.discriminator.predict([img_A,img_B]))
+        self.discriminator.compile(loss=custom_objective,
             optimizer=optimizer,
             metrics=['accuracy'])
 
