@@ -24,7 +24,7 @@ class Pix2Pix():
                   
        
         def D_loss(y_true, y_pred):
-            print(K.int_shape(y_true))
+            print(y_true.shape)
             return K.log(1.0 - y_pred) + K.log(1.0 - y_true)
                          
         # Input shape
