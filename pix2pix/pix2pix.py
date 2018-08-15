@@ -55,8 +55,8 @@ class Pix2Pix():
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        adv_loss = D_loss()
-        self.discriminator.compile(loss=adv_loss,
+        
+        self.discriminator.compile(loss=D_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
 
