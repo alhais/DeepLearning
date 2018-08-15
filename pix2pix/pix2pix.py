@@ -23,20 +23,9 @@ class Pix2Pix():
     def __init__(self):
                   
        
-        def D0_loss(y_true, y_pred):
-            return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
-        def D1_loss(y_true, y_pred):
-            return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
-        
-        def G0_loss(y_true, y_pred):
-            I = y_true [:,0]
-            I_pred =  y_pred [:,0]
-            Z =  y_true [:,1]
-            Z_pred =  y_pred [:,1]
-            return K.log(1.0 - I_pred) + K.log(1.0 - y_true)
+        def custom_loss(y_true, y_pred):
+            return y_true
 
-        def G1_loss(y_true, y_pred):
-            return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
                          
         # Input shape
         self.img_rows = 32
@@ -67,7 +56,7 @@ class Pix2Pix():
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
         
-        self.discriminator.compile(loss=D0_loss,
+        self.discriminator.compile(loss=custom_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
 
@@ -94,10 +83,12 @@ class Pix2Pix():
         # Discriminators determines validity of translated images / condition pairs
         [valid, match] = self.discriminator([I0, Z0])
 
-        new_loss = tf.reduce_mean(G0_loss(I,I0))
-                           
+        
+        aux_loss_M = Model(I,I0)                   
+            
+            
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
-        self.combined.compile(loss=[new_loss, D1_loss,G0_loss, G1_loss],
+        self.combined.compile(loss=[custom_loss, custom_loss,custom_loss,custom_loss],
                               loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
 
