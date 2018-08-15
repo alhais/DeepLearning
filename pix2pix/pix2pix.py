@@ -24,10 +24,7 @@ class Pix2Pix():
                   
         def create_adv_loss(discriminator):
             def loss(y_true, y_pred):
-                print("y_true=")
-                print( y_true.shape)
-                print("y_pred=")
-                print( y_pred.shape)
+                
                 return K.log(1.0 - y_pred) + K.log(1.0 - y_true)
             return loss
 
