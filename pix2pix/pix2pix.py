@@ -84,7 +84,7 @@ class Pix2Pix():
         [valid, match] = self.discriminator([I0, Z0])
 
         
-        aux_loss_M = Model(I,I0)                   
+        combine_model = Add()([I0, Z0])                 
             
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
