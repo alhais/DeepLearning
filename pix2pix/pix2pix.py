@@ -24,7 +24,7 @@ class Pix2Pix():
                   
        
         def D0_loss(y_true, y_pred):
-            print(tf.shape(y_true))
+            print(y_true.eval())
             return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
         def D1_loss(y_true, y_pred):
             print(y_true.shape)
