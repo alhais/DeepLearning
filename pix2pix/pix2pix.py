@@ -86,7 +86,7 @@ class Pix2Pix():
         
         final_model = Sequential()
         final_model.add(I)
-        final_model.add(I0)   
+        final_model.add(Z0)   
         final_model.summary()    
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
