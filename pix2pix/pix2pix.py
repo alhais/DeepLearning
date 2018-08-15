@@ -33,8 +33,8 @@ class Pix2Pix():
         def G0_loss(y_true, y_pred):
             result = []
             for i in range(len(y_pred)):
-            y_pred[i] = [max(min(x, 1 - K.epsilon()), K.epsilon()) for x in y_pred[i]]
-            result.append(-np.mean([y_true[i][j] * math.log(y_pred[i][j]) + (1 - y_true[i][j]) * math.log(1 - y_pred[i][j]) for j in range(len(y_pred[i]))]))
+                y_pred[i] = [max(min(x, 1 - K.epsilon()), K.epsilon()) for x in y_pred[i]]
+                result.append(-np.mean([y_true[i][j] * math.log(y_pred[i][j]) + (1 - y_true[i][j]) * math.log(1 - y_pred[i][j]) for j in range(len(y_pred[i]))]))
             return np.mean(result)
         def G1_loss(y_true, y_pred):
             print(y_true.shape)
