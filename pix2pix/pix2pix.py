@@ -24,7 +24,7 @@ class Pix2Pix():
                   
        
         def D0_loss(y_true, y_pred):
-            print(y_true.shape)
+            print(tf.shape(y_true))
             return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
         def D1_loss(y_true, y_pred):
             print(y_true.shape)
@@ -32,10 +32,9 @@ class Pix2Pix():
         
         def G0_loss(y_true, y_pred):
             result = []
-            for i in range(tf.shape(y_pred)):
-                y_pred[i] = [max(min(x, 1 - K.epsilon()), K.epsilon()) for x in y_pred[i]]
-                result.append(-np.mean([y_true[i][j] * math.log(y_pred[i][j]) + (1 - y_true[i][j]) * math.log(1 - y_pred[i][j]) for j in range(len(y_pred[i]))]))
-            return np.mean(result)
+            print(y_true.shape)
+            return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
+
         def G1_loss(y_true, y_pred):
             print(y_true.shape)
             return K.mean(K.square(y_pred - y_true), axis=-1)#K.log(1.0 - y_pred) + K.log(1.0 - y_true)
