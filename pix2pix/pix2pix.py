@@ -24,7 +24,7 @@ class Pix2Pix():
                   
         def create_adv_loss(discriminator):
             def loss(y_true, y_pred):
-                return K.log(1.0 - discriminator.predict(y_true))
+                return K.log(1.0 - y_true)
             return loss
 
         # Input shape
