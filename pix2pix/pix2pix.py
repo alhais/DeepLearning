@@ -17,6 +17,7 @@ import sys
 from data_loader import DataLoader
 import numpy as np
 import os
+import math
 
 class Pix2Pix():
     def __init__(self):
@@ -52,7 +53,7 @@ class Pix2Pix():
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        adv_loss = K.log(1.0 - self.discriminator.predict([img_A,img_B]))
+        adv_loss = math.log(1.0 - self.discriminator.predict([img_A,img_B]))
         self.discriminator.compile(loss=adv_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
