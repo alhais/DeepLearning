@@ -20,6 +20,12 @@ import os
 
 class Pix2Pix():
     def __init__(self):
+                
+        def create_adv_loss(discriminator):
+            def loss(y_true, y_pred):
+                return K.log(1.0 - discriminator.predict(y_pred))
+        return loss
+    
         # Input shape
         self.img_rows = 32
         self.img_cols = 32
@@ -41,10 +47,13 @@ class Pix2Pix():
         self.df = 16
 
         optimizer = Adam(0.0002, 0.5)
+        
+        
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        self.discriminator.compile(loss='mse',
+        adv_loss = create_adv_loss(self.discriminator)
+        self.discriminator.compile(loss=adv_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
 
