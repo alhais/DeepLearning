@@ -100,8 +100,9 @@ class Pix2Pix():
         
         
     def mutual_info_loss(self, c, c_given_x):
-
-        return K.mean(c * c_given_x)
+        first_log = 1 - K.log(K.clip(c, K.epsilon(), None) + 1.)
+        second_log = 1 - K.log(K.clip(c_given_x, K.epsilon(), None) + 1.)    
+        return K.mean(first_log + second_log, axis=-1)
 
 
     def build_generator(self):
