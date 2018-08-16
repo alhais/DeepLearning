@@ -275,16 +275,17 @@ class Pix2Pix():
                 
                 [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
                 
-                fake_Z0 = []   
+                fakes_Z0 = []   
                 #Suffling EMG data
-                fake_Z0.append(Z0[imgs_B.shape[0] - 1])
+                fakes_Z0.append(Z0[imgs_B.shape[0] - 1])
                 for x in range(imgs_B.shape[0] - 1):
-                    fake_Z0.append(Z0[x])
+                    fakes_Z0.append(Z0[x])
+                fakes_Z0 = np.array(fakes_Z0)
 
                 # Train the discriminators (original images = real / generated = Fake)
                 d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
                 d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, fake_match])
-                d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fake_Z0], [fake, fake_match])
+                d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [fake, fake_match])
                 
                 #d_loss_fake = 0
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake,d_loss_mismatch)
