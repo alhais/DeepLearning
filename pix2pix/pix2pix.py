@@ -287,8 +287,10 @@ class Pix2Pix():
                 d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, fake_match])
                 d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [fake, fake_match])
                 
-                #d_loss_fake = 0
-                d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
+                
+                #d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
+                d_loss = np.add(d_loss_real, d_loss_fake)
+                d_loss = 0.5 * np.add(d_loss, d_loss_mismatch)
 
                 # -----------------
                 #  Train Generator
