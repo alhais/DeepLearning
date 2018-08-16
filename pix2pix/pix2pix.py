@@ -289,7 +289,7 @@ class Pix2Pix():
 
                 # Train the generators
                 g_loss = []
-                if epoch >= 1:
+                if epoch >= 3:
                     g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
                 else:
                     g_loss.append(0);
