@@ -288,11 +288,15 @@ class Pix2Pix():
                 # -----------------
 
                 # Train the generators
-                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
+                
+                if epoch >= 1:
+                    g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
+                else:
+                    g_loss = 0
 
                 elapsed_time = datetime.datetime.now() - start_time
                 
-        
+                
 
                 # If at save interval => save generated image samples
                 if batch_i % sample_interval == 0:
