@@ -95,7 +95,7 @@ class Pix2Pix():
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
         self.combined.compile(loss=loss,
-                              loss_weights=[1, 1, 1, 100],
+                              loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
         
         
