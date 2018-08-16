@@ -88,8 +88,9 @@ class Pix2Pix():
                           averaged_samples=valid)
         partial_gp_loss.__name__ = 'gradient_penalty' # Keras requires function names
         
-        #g_loss = tf.reduce_mean(tf.losses.mean_squared_error(I0, Z0)) 
-        loss = [partial_gp_loss, 'mae','mae', 'mae']
+         
+        #loss = [partial_gp_loss, 'mae','mae', 'mae']
+        loss = ['mse', 'mae','mae', 'mae']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
