@@ -55,7 +55,7 @@ class Pix2Pix():
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
         
-        self.discriminator.compile(loss=self.mutual_info_loss,
+        self.discriminator.compile(loss=self.mutual_info_loss_A,
             optimizer=optimizer,
             metrics=['accuracy'])
 
@@ -90,7 +90,7 @@ class Pix2Pix():
         
          
         #loss = [partial_gp_loss, 'mae','mae', 'mae']
-        loss = ['mse', 'mse','mae', 'mae']
+        loss = [self.mutual_info_loss_A, self.mutual_info_loss_B,self.mutual_info_loss_C, self.mutual_info_loss_C]
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
@@ -99,11 +99,20 @@ class Pix2Pix():
                               optimizer=optimizer)
         
         
-    def mutual_info_loss(self, c, c_given_x):
+    def mutual_info_loss_A(self, c, c_given_x):
         first_log = K.log(K.clip(1 - c, K.epsilon(), None))
         second_log = K.log(K.clip(1 - c_given_x, K.epsilon(), None))    
         return K.mean(first_log + second_log, axis=-1)
-
+    
+    def mutual_info_loss_B(self, c, c_given_x):
+        first_log = K.log(K.clip(1 - c, K.epsilon(), None))
+        second_log = K.log(K.clip(1 - c_given_x, K.epsilon(), None))    
+        return K.mean(first_log + second_log, axis=-1)
+    
+     def mutual_info_loss_C(self, c, c_given_x):
+        first_log = K.log(K.clip(1 - c, K.epsilon(), None))
+        second_log = K.log(K.clip(1 - c_given_x, K.epsilon(), None))    
+        return K.mean(first_log + second_log, axis=-1)
 
     def build_generator(self):
         """U-Net Generator"""
