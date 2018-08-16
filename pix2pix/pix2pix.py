@@ -23,12 +23,13 @@ from keras.applications.vgg16 import VGG16
 class Pix2Pix():
     def __init__(self):
                   
-       
-        def perceptual_loss(y_true, y_pred):
-            vgg = VGG16(include_top=False, weights='imagenet', input_shape=(256,256,3))
-            loss_model = Model(inputs=vgg.input, outputs=vgg.get_layer('block3_conv3').output)
-            loss_model.trainable = False
-            return K.mean(K.square(loss_model(y_true) - loss_model(y_pred)))
+        def get_loss(vgg):
+            def perceptual_loss(y_true, y_pred):
+                #vgg = VGG16(include_top=False, weights='imagenet', input_shape=(256,256,3))
+                loss_model = Model(inputs=vgg.input, outputs=vgg.output)
+                loss_model.trainable = False
+                return K.mean(K.square(loss_model(y_true) - loss_model(y_pred)))
+            return perceptual_loss
 
                          
         # Input shape
@@ -89,7 +90,7 @@ class Pix2Pix():
 
         
         #g_loss = tf.reduce_mean(tf.losses.mean_squared_error(I0, Z0)) 
-        loss = [perceptual_loss, 'mae','mae', 'mae']
+        loss = [get_loss(self.generator([I, img_B])), 'mae','mae', 'mae']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
