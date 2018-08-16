@@ -84,9 +84,9 @@ class Pix2Pix():
 
         # Use Python partial to provide loss function with additional
         # 'averaged_samples' argument
-        partial_gp_loss = partial(self.mutual_info_loss_A,
-                          averaged_samples=valid)
-        partial_gp_loss.__name__ = 'gradient_penalty' # Keras requires function names
+        custom_loss = partial(self.mutual_info_loss,
+                          pass_variable=valid)
+        custom_loss.__name__ = 'custom_loss' # Keras requires function names
         
          
         #loss = [partial_gp_loss, 'mae','mae', 'mae']
@@ -99,20 +99,11 @@ class Pix2Pix():
                               optimizer=optimizer)
         
         
-    def mutual_info_loss_A(self, c, c_given_x):
+    def mutual_info_loss(self, c, c_given_x):
         first_log = -K.log(K.clip(1 - c, K.epsilon(), None))
         second_log = -K.log(K.clip(1 - c_given_x, K.epsilon(), None))    
         return K.mean(first_log + second_log, axis=-1)
-    
-    def mutual_info_loss_B(self, c, c_given_x):
-        first_log = -K.log(K.clip(c, K.epsilon(), None))
-        second_log = -K.log(K.clip(1 - c_given_x, K.epsilon(), None))    
-        return K.mean(first_log + second_log, axis=-1)
-    
-    def mutual_info_loss_C(self, c, c_given_x):
-        first_log = -K.log(K.clip(c, K.epsilon(), None))
-        second_log = -K.log(K.clip(1 - c_given_x, K.epsilon(), None))    
-        return K.mean(first_log + second_log, axis=-1)
+
 
     def build_generator(self):
         """U-Net Generator"""
