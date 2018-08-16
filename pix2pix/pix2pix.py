@@ -23,13 +23,6 @@ from keras.applications.vgg16 import VGG16
 class Pix2Pix():
     def __init__(self):
                   
-        def get_loss(loss_model):
-            def perceptual_loss(y_true, y_pred):
-                #vgg = VGG16(include_top=False, weights='imagenet', input_shape=(256,256,3))
-                #loss_model = Model(inputs=vgg.input, outputs=vgg.output)
-                #loss_model.trainable = False
-                return K.mean(K.square(y_true) - y_pred + loss_model)
-            return perceptual_loss
 
                          
         # Input shape
@@ -88,15 +81,28 @@ class Pix2Pix():
         # Discriminators determines validity of translated images / condition pairs
         [valid, match] = self.discriminator([I0, Z0])
 
+        # Use Python partial to provide loss function with additional
+        # 'averaged_samples' argument
+        partial_gp_loss = partial(self.gradient_penalty_loss,
+                          averaged_samples=valid)
+        partial_gp_loss.__name__ = 'gradient_penalty' # Keras requires function names
         
         #g_loss = tf.reduce_mean(tf.losses.mean_squared_error(I0, Z0)) 
-        loss = [get_loss(I0), 'mae','mae', 'mae']
+        loss = [partial_gp_loss, 'mae','mae', 'mae']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
         self.combined.compile(loss=loss,
                               loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
+        
+        
+    def gradient_penalty_loss(self, y_true, y_pred, averaged_samples):
+        """
+        Computes gradient penalty based on prediction and weighted real / fake samples
+        """
+        
+        return K.mean(y_true)
 
     def build_generator(self):
         """U-Net Generator"""
