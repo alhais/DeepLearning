@@ -84,7 +84,7 @@ class Pix2Pix():
 
         # Use Python partial to provide loss function with additional
         # 'averaged_samples' argument
-        partial_gp_loss = partial(self.mutual_info_loss,
+        partial_gp_loss = partial(self.mutual_info_loss_A,
                           averaged_samples=valid)
         partial_gp_loss.__name__ = 'gradient_penalty' # Keras requires function names
         
