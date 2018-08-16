@@ -90,7 +90,7 @@ class Pix2Pix():
 
         
         #g_loss = tf.reduce_mean(tf.losses.mean_squared_error(I0, Z0)) 
-        loss = [get_loss(I), 'mae','mae', 'mae']
+        loss = [get_loss(I0), 'mae','mae', 'mae']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
