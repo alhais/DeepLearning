@@ -100,12 +100,8 @@ class Pix2Pix():
         
         
     def mutual_info_loss(self, c, c_given_x):
-        """The mutual information metric we aim to minimize"""
-        eps = 1e-8
-        conditional_entropy = K.mean(- K.sum(K.log(c_given_x + eps) * c, axis=1))
-        entropy = K.mean(- K.sum(K.log(c + eps) * c, axis=1))
 
-        return conditional_entropy + entropy
+        return K.mean(c * c_given_x)
 
 
     def build_generator(self):
@@ -278,8 +274,8 @@ class Pix2Pix():
                 # Train the generators
                 g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
 
-                #elapsed_time = datetime.datetime.now() - start_time
-                elapsed_time = 0
+                elapsed_time = datetime.datetime.now() - start_time
+                
         
 
                 # If at save interval => save generated image samples
