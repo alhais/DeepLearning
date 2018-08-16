@@ -18,13 +18,17 @@ from data_loader import DataLoader
 import numpy as np
 import os
 import keras.backend as K
+from keras.applications.vgg16 import VGG16
 
 class Pix2Pix():
     def __init__(self):
                   
        
-        def custom_loss(y_true, y_pred):
-            return y_true
+        def perceptual_loss(y_true, y_pred):
+            vgg = VGG16(include_top=False, weights='imagenet', input_shape=image_shape)
+            loss_model = Model(inputs=vgg.input, outputs=vgg.get_layer('block3_conv3').output)
+            loss_model.trainable = False
+            return K.mean(K.square(loss_model(y_true) - loss_model(y_pred)))
 
                          
         # Input shape
@@ -56,7 +60,7 @@ class Pix2Pix():
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
         
-        self.discriminator.compile(loss=custom_loss,
+        self.discriminator.compile(loss='mse',
             optimizer=optimizer,
             metrics=['accuracy'])
 
@@ -84,11 +88,12 @@ class Pix2Pix():
         [valid, match] = self.discriminator([I0, Z0])
 
         
-        g_loss = tf.reduce_mean(tf.losses.mean_squared_error(I0, Z0))  
+        #g_loss = tf.reduce_mean(tf.losses.mean_squared_error(I0, Z0)) 
+        loss = [perceptual_loss, 'mae','mae', 'mae']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
-        self.combined.compile(loss=[custom_loss, custom_loss,custom_loss,custom_loss],
+        self.combined.compile(loss=loss,
                               loss_weights=[1, 1, 100, 100],
                               optimizer=optimizer)
 
