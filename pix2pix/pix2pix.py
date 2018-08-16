@@ -90,7 +90,7 @@ class Pix2Pix():
         
          
         #loss = [partial_gp_loss, 'mae','mae', 'mae']
-        loss = ['mse', 'mse', 'mse', 'mae']
+        loss = ['mse', 'mse', 'mae', 'mae']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
@@ -289,7 +289,7 @@ class Pix2Pix():
 
                 # Train the generators
                 g_loss = []
-                if epoch >= 3:
+                if epoch >= 10:
                     g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
                 else:
                     g_loss.append(0);
