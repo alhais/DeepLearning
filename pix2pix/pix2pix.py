@@ -100,8 +100,8 @@ class Pix2Pix():
         
         
     def mutual_info_loss(self, c, c_given_x):
-        first_log = K.log(1 - K.clip(c, K.epsilon(), None))
-        second_log = K.log(1 - K.clip(c_given_x, K.epsilon(), None))    
+        first_log = K.log(K.clip(1 - c, K.epsilon(), None))
+        second_log = K.log(K.clip(1 - c_given_x, K.epsilon(), None))    
         return K.mean(first_log + second_log, axis=-1)
 
 
