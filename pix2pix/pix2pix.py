@@ -25,7 +25,7 @@ class Pix2Pix():
                   
        
         def perceptual_loss(y_true, y_pred):
-            vgg = VGG16(include_top=False, weights='imagenet', input_shape=image_shape)
+            vgg = VGG16(include_top=False, weights='imagenet', input_shape=(32,32,3))
             loss_model = Model(inputs=vgg.input, outputs=vgg.get_layer('block3_conv3').output)
             loss_model.trainable = False
             return K.mean(K.square(loss_model(y_true) - loss_model(y_pred)))
