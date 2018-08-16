@@ -55,7 +55,7 @@ class Pix2Pix():
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
         
-        self.discriminator.compile(loss='mse',
+        self.discriminator.compile(loss=self.mutual_info_loss,
             optimizer=optimizer,
             metrics=['accuracy'])
 
@@ -84,7 +84,7 @@ class Pix2Pix():
 
         # Use Python partial to provide loss function with additional
         # 'averaged_samples' argument
-        partial_gp_loss = partial(self.gradient_penalty_loss,
+        partial_gp_loss = partial(self.mutual_info_loss,
                           averaged_samples=valid)
         partial_gp_loss.__name__ = 'gradient_penalty' # Keras requires function names
         
@@ -99,12 +99,11 @@ class Pix2Pix():
                               optimizer=optimizer)
         
         
-    def gradient_penalty_loss(self, y_true, y_pred, averaged_samples):
-        """
-        Computes gradient penalty based on prediction and weighted real / fake samples
-        """
-        
-        return K.mean(y_true)
+    def mutual_info_loss(self, c, c_given_x):
+        conditional_entropy = K.mean(K.sum(1 - K.log(c_given_x), axis=1))
+        entropy = K.mean(K.sum(1 - K.log(c), axis=1))
+        return conditional_entropy + entropy
+
 
     def build_generator(self):
         """U-Net Generator"""
