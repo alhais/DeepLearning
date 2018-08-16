@@ -55,7 +55,7 @@ class Pix2Pix():
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
         
-        self.discriminator.compile(loss=self.mutual_info_loss_A,
+        self.discriminator.compile(loss='msle',
             optimizer=optimizer,
             metrics=['accuracy'])
 
@@ -90,7 +90,7 @@ class Pix2Pix():
         
          
         #loss = [partial_gp_loss, 'mae','mae', 'mae']
-        loss = [self.mutual_info_loss_A, self.mutual_info_loss_B,self.mutual_info_loss_C, self.mutual_info_loss_C]
+        loss = ['msle', 'smsle', 'msle', 'msle']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
