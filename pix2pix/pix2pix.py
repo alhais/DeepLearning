@@ -90,7 +90,7 @@ class Pix2Pix():
         
          
         #loss = [partial_gp_loss, 'mae','mae', 'mae']
-        loss = ['msle', 'smsle', 'msle', 'msle']
+        loss = ['msle', 'msle', 'msle', 'msle']
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
