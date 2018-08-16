@@ -100,8 +100,8 @@ class Pix2Pix():
         
         
     def mutual_info_loss(self, c, c_given_x):
-        conditional_entropy = K.mean(K.sum(1 - K.log(c_given_x), axis=1))
-        entropy = K.mean(K.sum(1 - K.log(c), axis=1))
+        conditional_entropy = K.mean(- K.sum(1 - K.log(c_given_x), axis=1))
+        entropy = K.mean(- K.sum(1 - K.log(c), axis=1))
         return conditional_entropy + entropy
 
 
