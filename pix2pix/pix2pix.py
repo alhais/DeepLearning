@@ -19,6 +19,7 @@ import numpy as np
 import os
 import keras.backend as K
 from keras.applications.vgg16 import VGG16
+from functools import partial
 
 class Pix2Pix():
     def __init__(self):
