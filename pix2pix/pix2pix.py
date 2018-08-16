@@ -23,11 +23,11 @@ from keras.applications.vgg16 import VGG16
 class Pix2Pix():
     def __init__(self):
                   
-        def get_loss(vgg):
+        def get_loss(loss_model):
             def perceptual_loss(y_true, y_pred):
                 #vgg = VGG16(include_top=False, weights='imagenet', input_shape=(256,256,3))
-                loss_model = Model(inputs=vgg.input, outputs=vgg.output)
-                loss_model.trainable = False
+                #loss_model = Model(inputs=vgg.input, outputs=vgg.output)
+                #loss_model.trainable = False
                 return K.mean(K.square(loss_model(y_true) - loss_model(y_pred)))
             return perceptual_loss
 
