@@ -293,7 +293,8 @@ class Pix2Pix():
                     d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [valid, fake_match])
                     g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
                 else:
-                    self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200)
+                    self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
+                    print("CAE Finished")
                     #model.fit([X1,X2], [X1,X2], epochs=1, batch_size=200) 
 
                     
