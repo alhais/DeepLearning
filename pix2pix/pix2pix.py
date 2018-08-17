@@ -252,9 +252,9 @@ class Pix2Pix():
         fake_match = np.zeros((batch_size,) + (1,1,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
         
-        imgs_A, imgs_B = self.data_loader.load_data(batch_size=30, is_testing=False)
+        imgs_A, imgs_B = self.data_loader.load_data(batch_size=200, is_testing=False)
         history = self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
-        print(history.history['val_loss'])
+        print(history.history)
                     
         imgs_A = []
         imgs_B = []
