@@ -65,13 +65,20 @@ class Pix2Pix():
         #-------------------------
 
         # Build the generator
-        self.generator = self.build_generator()
-        self.CAE = Model(inputs=self.generator.input, outputs=self.generator.get_layer('output').output)
-        self.CAE.trainable = True
+        self.CAE  = self.build_generator()
 
         self.CAE.compile(loss='mse',
             optimizer=optimizer,
             metrics=['accuracy'])
+        
+        #First train CAE Convolutional Autoencoder with good data
+        imgs_A, imgs_B = self.data_loader.load_data(batch_size=200, is_testing=False)
+        history = self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
+        print(history.history)
+        
+        #Get new model already with trainned encoder decoder
+        self.generator = Model(inputs=self.CAE.input, outputs=[self.CAE.get_layer('output').output, self.CAE.get_layer('z0').output])
+        self.generator.trainable = True
 
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
@@ -142,7 +149,7 @@ class Pix2Pix():
         h = Dense(512)(h)
         h = LeakyReLU(alpha=0.2)(h)
         h = BatchNormalization(momentum=0.8)(h)
-        z0 = Dense(256)(h)
+        z0 = Dense(256, name='z0')(h)
 
 
         # Image input
@@ -197,7 +204,7 @@ class Pix2Pix():
         strides=(2,2), padding='SAME', activation='tanh')(h)
         output_img = UpSampling2D(size=2, name='output')(h)
 
-        return Model([input_EMG,input_I], [output_img,z0])
+        return Model([input_EMG,input_I], [output_img])
 
     def build_discriminator(self):
     
@@ -252,9 +259,7 @@ class Pix2Pix():
         fake_match = np.zeros((batch_size,) + (1,1,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
         
-        imgs_A, imgs_B = self.data_loader.load_data(batch_size=200, is_testing=False)
-        history = self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
-        print(history.history)
+        
                     
         imgs_A = []
         imgs_B = []
