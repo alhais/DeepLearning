@@ -252,6 +252,10 @@ class Pix2Pix():
         fake_match = np.zeros((batch_size,) + (1,1,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
         
+        self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
+        print("CAE Train Finished")
+                    
+        
 
         for epoch in range(epochs):
             for batch_i, (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size)):
@@ -279,32 +283,20 @@ class Pix2Pix():
                     fakes_Z0.append(Z0[x])
                 fakes_Z0 = np.array(fakes_Z0)
 
+ 
+                # Train the discriminators (original images = real / generated = Fake)
+                d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
+                d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, fake_match])
+                d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [valid, fake_match])
                 
-                            
-                          
-                d_loss_real = np.zeros(2)
-                d_loss_fake = np.zeros(2)
-                d_loss_mismatch = np.zeros(2)
-                g_loss = np.zeros(2)
-                if epoch >= 1:
-                    # Train the discriminators (original images = real / generated = Fake)
-                    d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
-                    d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, fake_match])
-                    d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [valid, fake_match])
-                    g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
-                else:
-                    self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
-                    print("CAE Finished")
-                    #model.fit([X1,X2], [X1,X2], epochs=1, batch_size=200) 
 
-                    
                     
                 #d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 d_loss = np.add(d_loss_real, d_loss_fake)
                 d_loss = 0.5 * np.add(d_loss, d_loss_mismatch)
 
 
-
+                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
                 elapsed_time = datetime.datetime.now() - start_time
                 
                 
