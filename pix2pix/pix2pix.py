@@ -65,7 +65,7 @@ class Pix2Pix():
         #-------------------------
 
         # Build the generator
-        self.generator = self.build_generator()
+        self.generator, self.CAE = self.build_generator()
 
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
@@ -191,7 +191,7 @@ class Pix2Pix():
         strides=(2,2), padding='SAME', activation='tanh')(h)
         output_img = UpSampling2D(size=2)(h)
 
-        return Model([input_EMG,input_I], [output_img,z0])
+        return Model([input_EMG,input_I], [output_img,z0]), Model([input_EMG,input_I], [output_img])
 
     def build_discriminator(self):
     
@@ -274,6 +274,11 @@ class Pix2Pix():
                 fakes_Z0 = np.array(fakes_Z0)
 
                 # Train the generators
+                autoencoder.fit(x_train, x_train,
+                epochs=50,
+                batch_size=256,
+                shuffle=True,
+                validation_data=(x_test, x_test))
                 
                 g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
                                 
