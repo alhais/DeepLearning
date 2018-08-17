@@ -65,8 +65,10 @@ class Pix2Pix():
         #-------------------------
 
         # Build the generator
-        self.generator, self.CAE = self.build_generator()
-        
+        self.generator = self.build_generator()
+        self.CAE = Model(inputs=self.generator.input, outputs=self.generator.get_layer('output').output)
+        self.CAE.trainable = True
+
         self.CAE.compile(loss='mse',
             optimizer=optimizer,
             metrics=['accuracy'])
@@ -193,9 +195,9 @@ class Pix2Pix():
         h = BatchNormalization(momentum=0.8)(h)
         h = Conv2D(filters=3, kernel_size=(5),\
         strides=(2,2), padding='SAME', activation='tanh')(h)
-        output_img = UpSampling2D(size=2)(h)
+        output_img = UpSampling2D(size=2, name='output')(h)
 
-        return Model([input_EMG,input_I], [output_img,z0]), Model([input_EMG,input_I], [output_img])
+        return Model([input_EMG,input_I], [output_img,z0])
 
     def build_discriminator(self):
     
@@ -284,14 +286,14 @@ class Pix2Pix():
                 d_loss_fake = np.zeros(2)
                 d_loss_mismatch = np.zeros(2)
                 g_loss = np.zeros(2)
-                if epoch >= 10:
+                if epoch >= 1:
                     # Train the discriminators (original images = real / generated = Fake)
                     d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
                     d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, fake_match])
                     d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [valid, fake_match])
                     g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
                 else:
-                    self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200)
+                    self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=10, batch_size=200)
                     #model.fit([X1,X2], [X1,X2], epochs=1, batch_size=200) 
 
                     
