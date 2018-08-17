@@ -274,13 +274,14 @@ class Pix2Pix():
                 fakes_Z0 = np.array(fakes_Z0)
 
                 # Train the generators
-                autoencoder.fit(x_train, x_train,
+                self.CAE.fit([imgs_A,imgs_B], [imgs_A,imgs_B], epochs=1, batch_size=200)
+                #model.fit([X1,X2], [X1,X2], epochs=1, batch_size=200)             
                 epochs=50,
                 batch_size=256,
                 shuffle=True,
                 validation_data=(x_test, x_test))
                 
-                g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
+                
                                 
                 d_loss_real = np.zeros(2)
                 d_loss_fake = np.zeros(2)
@@ -289,7 +290,8 @@ class Pix2Pix():
                     # Train the discriminators (original images = real / generated = Fake)
                     d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
                     d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, fake_match])
-                    d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [valid, fake_match]) 
+                    d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [valid, fake_match])
+                    g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
 
                     
                     
