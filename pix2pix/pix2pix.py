@@ -66,6 +66,10 @@ class Pix2Pix():
 
         # Build the generator
         self.generator, self.CAE = self.build_generator()
+        
+        self.CAE.compile(loss='mse',
+            optimizer=optimizer,
+            metrics=['accuracy'])
 
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
