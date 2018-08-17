@@ -277,9 +277,9 @@ class Pix2Pix():
                 
                 g_loss = self.combined.train_on_batch([imgs_I, imgs_A, imgs_B], [valid, match, imgs_A, Z0])
                                 
-                d_loss_real = np.zeros(1)
-                d_loss_fake = np.zeros(1)
-                d_loss_mismatch = np.zeros(1)
+                d_loss_real = np.zeros(2)
+                d_loss_fake = np.zeros(2)
+                d_loss_mismatch = np.zeros(2)
                 if epoch >= 10:
                     # Train the discriminators (original images = real / generated = Fake)
                     d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
