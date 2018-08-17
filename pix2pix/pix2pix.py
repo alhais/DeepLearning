@@ -278,7 +278,7 @@ class Pix2Pix():
                 fakes_Z0 = np.array(fakes_Z0)
 
                 # Train the generators
-                self.CAE.fit([imgs_A,imgs_B], [imgs_A,imgs_B], epochs=1, batch_size=200)
+                self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200)
                 #model.fit([X1,X2], [X1,X2], epochs=1, batch_size=200)             
                           
                 d_loss_real = np.zeros(2)
