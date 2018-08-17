@@ -252,11 +252,12 @@ class Pix2Pix():
         fake_match = np.zeros((batch_size,) + (1,1,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
         
-        (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size)
+        imgs_A, imgs_B = self.data_loader.load_data(batch_size=30, is_testing=False)
         self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
         print("CAE Train Finished")
                     
-        
+        imgs_A = []
+        imgs_B = []
 
         for epoch in range(epochs):
             for batch_i, (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size)):
