@@ -276,16 +276,11 @@ class Pix2Pix():
                 # Train the generators
                 self.CAE.fit([imgs_A,imgs_B], [imgs_A,imgs_B], epochs=1, batch_size=200)
                 #model.fit([X1,X2], [X1,X2], epochs=1, batch_size=200)             
-                epochs=50,
-                batch_size=256,
-                shuffle=True,
-                validation_data=(x_test, x_test))
-                
-                
-                                
+                          
                 d_loss_real = np.zeros(2)
                 d_loss_fake = np.zeros(2)
                 d_loss_mismatch = np.zeros(2)
+                g_loss = np.zeros(2)
                 if epoch >= 10:
                     # Train the discriminators (original images = real / generated = Fake)
                     d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
