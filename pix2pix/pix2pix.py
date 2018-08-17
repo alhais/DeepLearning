@@ -318,7 +318,7 @@ class Pix2Pix():
             imgs_I.append(imgs_A[0])
         imgs_I = np.array(imgs_I)
         [fake_A, Z0] = self.generator.predict([imgs_I,imgs_B])
-        #fake_A = fake_A*0.5
+        fake_A = fake_A*0.95
         gen_imgs = np.concatenate([imgs_B, fake_A, imgs_A])
         
         # Rescale images 0 - 1
