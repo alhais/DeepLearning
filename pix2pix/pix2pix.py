@@ -113,15 +113,18 @@ class Pix2Pix():
         img_A = Input(shape=self.img_shape)
         img_B = Input(shape=self.img_shape)
 
+        
         # By conditioning on B generate a fake version of A
         [I0, Z0] = self.generator([I, img_B])
 
-        # For the combined model we will only train the generator
-        self.discriminator.trainable = False
+        
 
 
         # Discriminators determines validity of translated images / condition pairs
+        # For the combined model we will only train the generator
+        self.discriminator.trainable = True
         [valid, match] = self.discriminator([I0, Z0])
+        self.discriminator.trainable = False
 
         # Use Python partial to provide loss function with additional
         # 'averaged_samples' argument
