@@ -74,8 +74,35 @@ class Pix2Pix():
         
         #First train CAE Convolutional Autoencoder with good data
         imgs_A, imgs_B = self.data_loader.load_data(batch_size=200, is_testing=False)
-        history = self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=1, batch_size=200,verbose=0)
+        history = self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=10, batch_size=200,verbose=0)
         print(history.history)
+        
+        os.makedirs('images/%s' % self.dataset_name, exist_ok=True)
+        r, c = 3, 30
+
+        imgs_A, imgs_B = self.data_loader.load_data(batch_size=30, is_testing=True)
+        imgs_I = []
+        for x in range(imgs_A.shape[0]):
+            imgs_I.append(imgs_A[0])
+        imgs_I = np.array(imgs_I)
+        fake_A = self.CAE.predict([imgs_I,imgs_B])
+        fake_A = fake_A*0.95
+        gen_imgs = np.concatenate([imgs_B, fake_A, imgs_A])
+        
+        # Rescale images 0 - 1
+        gen_imgs = 0.5 * gen_imgs + 0.5
+        
+        titles = ['EMG MFFC', 'Generated', 'Original']
+        fig, axs = plt.subplots(r, c)
+        cnt = 0
+        for i in range(r):
+            for j in range(c):
+                axs[i,j].imshow(gen_imgs[cnt])
+                axs[i, j].set_title(titles[i],fontsize=1)
+                axs[i,j].axis('off')
+                cnt += 1
+        fig.savefig("images/%s/cae_train.png" % (self.dataset_name), dpi=900)
+        plt.close()
         
         #Get new model already with trainned encoder decoder
         self.generator = Model(inputs=self.CAE.input, outputs=[self.CAE.get_layer('output').output, self.CAE.get_layer('z0').output])
@@ -259,11 +286,6 @@ class Pix2Pix():
         match = np.ones((batch_size,) + (1,1,1))
         fake_match = np.zeros((batch_size,) + (1,1,1))
         fake = np.zeros((batch_size,) + self.disc_patch)
-        
-        
-                    
-        imgs_A = []
-        imgs_B = []
 
         for epoch in range(epochs):
             for batch_i, (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size)):
@@ -294,7 +316,7 @@ class Pix2Pix():
  
                 # Train the discriminators (original images = real / generated = Fake)
                 d_loss_real = self.discriminator.train_on_batch([imgs_A, Z0], [valid, match])
-                d_loss_fake = self.discriminator.train_on_batch([fake_A, Z0], [fake, match])
+                d_loss_fake = self.discriminator.train_on_batch([fake_A, fakes_Z0], [fake, fake_match])
                 #d_loss_mismatch = self.discriminator.train_on_batch([imgs_A, fakes_Z0], [valid, fake_match])
                 
 
