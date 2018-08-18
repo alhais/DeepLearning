@@ -73,8 +73,8 @@ class Pix2Pix():
             metrics=['accuracy'])
         
         #First train CAE Convolutional Autoencoder with good data
-        imgs_A, imgs_B = self.data_loader.load_data(batch_size=200, is_testing=False)
-        history = self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=10, batch_size=200,verbose=0)
+        imgs_A, imgs_B = self.data_loader.load_data(batch_size=1200, is_testing=False)
+        history = self.CAE.fit([imgs_A,imgs_B], imgs_A, epochs=50, batch_size=1200,verbose=0)
         print(history.history)
         
         os.makedirs('images/%s' % self.dataset_name, exist_ok=True)
