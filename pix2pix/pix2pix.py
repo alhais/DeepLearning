@@ -106,7 +106,7 @@ class Pix2Pix():
         
         #Get new model already with trainned encoder decoder
         self.generator = Model(inputs=self.CAE.input, outputs=[self.CAE.get_layer('output').output, self.CAE.get_layer('z0').output])
-        self.generator.trainable = True
+        self.generator.trainable = False
 
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
