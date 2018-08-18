@@ -20,6 +20,7 @@ import os
 import keras.backend as K
 from keras.applications.vgg16 import VGG16
 from functools import partial
+from keras import losses
 
 class Pix2Pix():
     def __init__(self):
@@ -103,12 +104,12 @@ class Pix2Pix():
         
          
         #loss = [partial_gp_loss, 'mae','mae', 'mae']
-        loss = ['mse', 'mse', 'mae', 'mae']
+        loss = ['mse', 'mse', losses.mean_squared_logarithmic_error, losses.mean_squared_logarithmic_error]
            
             
         self.combined = Model(inputs=[img_A, I, img_B], outputs=[valid, match, I0, Z0])
         self.combined.compile(loss=loss,
-                              loss_weights=[1, 1, 100, 100],
+                              loss_weights=[1, 1, 0.001, 0.001],
                               optimizer=optimizer)
         
         
