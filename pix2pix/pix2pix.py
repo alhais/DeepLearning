@@ -106,7 +106,7 @@ class Pix2Pix():
         
         #Get new model already with trainned encoder decoder
         self.generator = Model(inputs=self.CAE.input, outputs=[self.CAE.get_layer('output').output, self.CAE.get_layer('z0').output])
-        self.generator.trainable = True
+       
 
         # Input images and their conditioning images
         I = Input(shape=self.img_shape)
@@ -119,12 +119,8 @@ class Pix2Pix():
 
         
 
-
-        # Discriminators determines validity of translated images / condition pairs
-        # For the combined model we will only train the generator
-        self.discriminator.trainable = True
         [valid, match] = self.discriminator([I0, Z0])
-        self.discriminator.trainable = False
+        
 
         # Use Python partial to provide loss function with additional
         # 'averaged_samples' argument
